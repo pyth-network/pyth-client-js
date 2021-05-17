@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Changed
+
+Repository url
+
 ## 1.0.1
 
 ### Fixed
