@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer'
+import { readBigInt64LE, readBigUInt64LE } from 'read-bigint'
 import { PublicKey } from '@solana/web3.js'
 
 export const Magic = 0xa1b2c3d4
@@ -82,17 +83,17 @@ export const parseProductData = (data: Buffer) => {
 
 const parsePriceInfo = (data: Buffer, exponent: number) => {
   // aggregate price
-  const priceComponent = data.readBigInt64LE(0)
+  const priceComponent = readBigInt64LE(data, 0)
   const price = Number(priceComponent) * 10 ** exponent
   // aggregate confidence
-  const confidenceComponent = data.readBigUInt64LE(8)
+  const confidenceComponent = readBigUInt64LE(data, 8)
   const confidence = Number(confidenceComponent) * 10 ** exponent
   // aggregate status
   const status = data.readUInt32LE(16)
   // aggregate corporate action
   const corporateAction = data.readUInt32LE(20)
   // aggregate publish slot
-  const publishSlot = data.readBigUInt64LE(24)
+  const publishSlot = readBigUInt64LE(data, 24)
   return {
     priceComponent,
     price,
@@ -122,9 +123,9 @@ export const parsePriceData = (data: Buffer) => {
   // unused
   // const unused = accountInfo.data.readUInt32LE(28)
   // currently accumulating price slot
-  const currentSlot = data.readBigUInt64LE(32)
+  const currentSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
-  const validSlot = data.readBigUInt64LE(40)
+  const validSlot = readBigUInt64LE(data, 40)
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(48, 80))
   // next price account in list

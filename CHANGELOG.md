@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Fixed
+
+Do not rely on Buffer's readBig(U)Int64LE
+
 ## 1.0.2
 
 ### Changed
