@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4
+
+### Fixed
+
+Gatsby support
+
 ## 1.0.3
 
 ### Fixed

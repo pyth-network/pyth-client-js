@@ -1,6 +1,6 @@
-import { Buffer } from 'buffer'
-import { readBigInt64LE, readBigUInt64LE } from 'read-bigint'
 import { PublicKey } from '@solana/web3.js'
+import { Buffer } from 'buffer'
+import { readBigInt64LE, readBigUInt64LE } from './readBig'
 
 export const Magic = 0xa1b2c3d4
 export const Version1 = 1
