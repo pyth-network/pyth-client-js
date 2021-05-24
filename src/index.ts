@@ -65,7 +65,7 @@ export const parseProductData = (data: Buffer) => {
   const priceAccountKey = new PublicKey(priceAccountBytes)
   const product: ProductAttributes = {}
   let idx = 48
-  while (idx < data.length) {
+  while (idx < size) {
     const keyLength = data[idx]
     idx++
     if (keyLength) {

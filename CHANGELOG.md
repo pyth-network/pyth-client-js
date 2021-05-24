@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+### Fixed
+
+Respect size when parsing product metadata
+
 ## 1.0.4
 
 ### Fixed
