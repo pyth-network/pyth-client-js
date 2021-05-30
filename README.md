@@ -12,7 +12,7 @@ See our [examples repo](https://github.com/pyth-network/pyth-examples) for real-
 
 ```javascript
 import { Connection, PublicKey } from '@solana/web3.js'
-import { parseMappingData, parsePriceData, parseProductData } from '@pythnetwork/pyth-client'
+import { parseMappingData, parsePriceData, parseProductData } from '@pythnetwork/client'
 
 const connection = new Connection(SOLANA_CLUSTER_URL)
 const publicKey = new PublicKey(ORACLE_MAPPING_PUBLIC_KEY)
