@@ -1,4 +1,4 @@
-# pyth-client-js
+# @pythnetwork/client
 
 ## A library for parsing on-chain Pyth oracle data
 
@@ -7,6 +7,20 @@
 This library consumes on-chain Pyth `accountInfo.data` from [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js) and returns JavaScript-friendly objects.
 
 See our [examples repo](https://github.com/pyth-network/pyth-examples) for real-world usage examples.
+
+## Installation
+
+### npm
+
+```
+$ npm install --save @pythnetwork/client
+```
+
+### Yarn
+
+```
+$ yarn add @pythnetwork/client
+```
 
 ## Example Usage
 

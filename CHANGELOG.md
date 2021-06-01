@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6
+
+### Changed
+
+Updated README.md
+
 ## 1.0.5
 
 ### Fixed
