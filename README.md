@@ -10,22 +10,24 @@ See our [examples repo](https://github.com/pyth-network/pyth-examples) for real-
 
 ## Example Usage
 
-```
+```javascript
 import { Connection, PublicKey } from '@solana/web3.js'
-import { parseMappingData, parsePriceData, parseProductData } from '@pythnetwork/pyth-client'
+import { parseMappingData, parsePriceData, parseProductData } from '@pythnetwork/client'
+
 const connection = new Connection(SOLANA_CLUSTER_URL)
-  const publicKey = new PublicKey(ORACLE_MAPPING_PUBLIC_KEY)
-  connection.getAccountInfo(publicKey).then((accountInfo) => {
-    const { productAccountKeys } = parseMappingData(accountInfo.data)
-    connection.getAccountInfo(productAccountKeys[productAccountKeys.length - 1]).then((accountInfo) => {
-      const { product, priceAccountKey } = parseProductData(accountInfo.data)
-      connection.getAccountInfo(priceAccountKey).then((accountInfo) => {
-        const { price, confidence } = parsePriceData(accountInfo.data)
-        console.log(`${product.symbol}: $${price} \xB1$${confidence}`)
-        // SRM/USD: $8.68725 ±$0.0131
-      })
+const publicKey = new PublicKey(ORACLE_MAPPING_PUBLIC_KEY)
+
+connection.getAccountInfo(publicKey).then((accountInfo) => {
+  const { productAccountKeys } = parseMappingData(accountInfo.data)
+  connection.getAccountInfo(productAccountKeys[productAccountKeys.length - 1]).then((accountInfo) => {
+    const { product, priceAccountKey } = parseProductData(accountInfo.data)
+    connection.getAccountInfo(priceAccountKey).then((accountInfo) => {
+      const { price, confidence } = parsePriceData(accountInfo.data)
+      console.log(`${product.symbol}: $${price} \xB1$${confidence}`)
+      // SRM/USD: $8.68725 ±$0.0131
     })
   })
+})
 ```
 
 To get streaming price updates, you may want to use `connection.onAccountChange`
