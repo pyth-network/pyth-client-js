@@ -129,7 +129,7 @@ export const parsePriceData = (data: Buffer) => {
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(48, 80))
   // next price account in list
-  const nextPriceAccountKey = new PublicKey(data.slice(80, 112))
+  const nextPriceAccountKey = PKorNull(data.slice(80, 112))
   // aggregate price updater
   const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(112, 144))
   const aggregatePriceInfo = parsePriceInfo(data.slice(144, 176), exponent)

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7
+
+### Changed
+
+allow nextPriceAccountKey to be null
+
 ## 1.0.6
 
 ### Changed
