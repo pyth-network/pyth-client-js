@@ -3,11 +3,12 @@ import { Buffer } from 'buffer'
 import { readBigInt64LE, readBigUInt64LE } from './readBig'
 
 export const Magic = 0xa1b2c3d4
-export const Version1 = 1
-export const Version = Version1
+export const Version2 = 2
+export const Version = Version2
 export const PriceStatus = ['Unknown', 'Trading', 'Halted', 'Auction']
 export const CorpAction = ['NoCorpAct']
-export const PriceType = ['Unknown', 'Price', 'TWAP', 'Volatility']
+export const PriceType = ['Unknown', 'Price']
+export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
 
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
@@ -126,16 +127,21 @@ export const parsePriceData = (data: Buffer) => {
   const currentSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
   const validSlot = readBigUInt64LE(data, 40)
+  // calculated values derived from agg. price - up to 8
+  const derived = []
+  for (let d = 0; d < 8; d++) {
+    derived.push(readBigInt64LE(data, 48 + d * 8))
+  }
   // product id / reference account
-  const productAccountKey = new PublicKey(data.slice(48, 80))
+  const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
-  const nextPriceAccountKey = PKorNull(data.slice(80, 112))
+  const nextPriceAccountKey = PKorNull(data.slice(144, 176))
   // aggregate price updater
-  const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(112, 144))
-  const aggregatePriceInfo = parsePriceInfo(data.slice(144, 176), exponent)
-  // price components - up to 16
+  const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(176, 208))
+  const aggregatePriceInfo = parsePriceInfo(data.slice(208, 240), exponent)
+  // price components - up to 32
   const priceComponents = []
-  let offset = 176
+  let offset = 240
   let shouldContinue = true
   while (offset < data.length && shouldContinue) {
     const publisher = PKorNull(data.slice(offset, offset + 32))
@@ -160,6 +166,7 @@ export const parsePriceData = (data: Buffer) => {
     numComponentPrices,
     currentSlot,
     validSlot,
+    derived,
     productAccountKey,
     nextPriceAccountKey,
     aggregatePriceUpdaterAccountKey,
