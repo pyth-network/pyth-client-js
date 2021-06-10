@@ -1,9 +1,9 @@
-import { Connection, PublicKey } from '@solana/web3.js'
+import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
 import { Magic, parseMappingData, parsePriceData, parseProductData, Version } from '../index'
 
 test('Price', (done) => {
   jest.setTimeout(60000)
-  const url = 'https://devnet.solana.com'
+  const url = clusterApiUrl('devnet')
   const oraclePublicKey = 'ArppEFcsybCLE8CRtQJLQ9tLv2peGmQoKWFuiUWm4KBP'
   const connection = new Connection(url)
   const publicKey = new PublicKey(oraclePublicKey)
