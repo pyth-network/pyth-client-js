@@ -1,9 +1,9 @@
-import { Connection, PublicKey } from '@solana/web3.js'
+import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
 import { Magic, parseProductData, Version } from '../index'
 
 test('Product', (done) => {
   jest.setTimeout(60000)
-  const url = 'https://devnet.solana.com'
+  const url = clusterApiUrl('devnet')
   const ethProductKey = 'HtwD2SutRJVatzAsnvRRjSujQFNdQodzF1FKo54NEzrs'
   const connection = new Connection(url)
   const publicKey = new PublicKey(ethProductKey)
