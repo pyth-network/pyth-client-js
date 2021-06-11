@@ -128,16 +128,24 @@ export const parsePriceData = (data: Buffer) => {
   // valid on-chain slot of aggregate price
   const validSlot = readBigUInt64LE(data, 40)
   // time-weighted average price
-  const twap = readBigInt64LE(data, 48)
+  const twapComponent = readBigInt64LE(data, 48)
+  const twap = Number(twapComponent) * 10 ** exponent
   // annualized price volatility
-  const avol = readBigUInt64LE(data, 56)
+  const avolComponent = readBigUInt64LE(data, 56)
+  const avol = Number(avolComponent) * 10 ** exponent
   // space for future derived values
-  const drv0 = readBigInt64LE(data, 64)
-  const drv1 = readBigInt64LE(data, 72)
-  const drv2 = readBigInt64LE(data, 80)
-  const drv3 = readBigInt64LE(data, 88)
-  const drv4 = readBigInt64LE(data, 96)
-  const drv5 = readBigInt64LE(data, 104)
+  const drv0Component = readBigInt64LE(data, 64)
+  const drv0 = Number(drv0Component) * 10 ** exponent
+  const drv1Component = readBigInt64LE(data, 72)
+  const drv1 = Number(drv1Component) * 10 ** exponent
+  const drv2Component = readBigInt64LE(data, 80)
+  const drv2 = Number(drv2Component) * 10 ** exponent
+  const drv3Component = readBigInt64LE(data, 88)
+  const drv3 = Number(drv3Component) * 10 ** exponent
+  const drv4Component = readBigInt64LE(data, 96)
+  const drv4 = Number(drv4Component) * 10 ** exponent
+  const drv5Component = readBigInt64LE(data, 104)
+  const drv5 = Number(drv5Component) * 10 ** exponent
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
@@ -172,13 +180,21 @@ export const parsePriceData = (data: Buffer) => {
     numComponentPrices,
     currentSlot,
     validSlot,
+    twapComponent,
     twap,
+    avolComponent,
     avol,
+    drv0Component,
     drv0,
+    drv1Component,
     drv1,
+    drv2Component,
     drv2,
+    drv3Component,
     drv3,
+    drv4Component,
     drv4,
+    drv5Component,
     drv5,
     productAccountKey,
     nextPriceAccountKey,
