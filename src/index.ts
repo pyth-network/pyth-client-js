@@ -127,11 +127,17 @@ export const parsePriceData = (data: Buffer) => {
   const currentSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
   const validSlot = readBigUInt64LE(data, 40)
-  // calculated values derived from agg. price - up to 8
-  const derived = []
-  for (let d = 0; d < 8; d++) {
-    derived.push(readBigInt64LE(data, 48 + d * 8))
-  }
+  // time-weighted average price
+  const twap = readBigInt64LE(data, 48)
+  // annualized price volatility
+  const avol = readBigUInt64LE(data, 56)
+  // space for future derived values
+  const drv0 = readBigInt64LE(data, 64)
+  const drv1 = readBigInt64LE(data, 72)
+  const drv2 = readBigInt64LE(data, 80)
+  const drv3 = readBigInt64LE(data, 88)
+  const drv4 = readBigInt64LE(data, 96)
+  const drv5 = readBigInt64LE(data, 104)
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
@@ -166,7 +172,14 @@ export const parsePriceData = (data: Buffer) => {
     numComponentPrices,
     currentSlot,
     validSlot,
-    derived,
+    twap,
+    avol,
+    drv0,
+    drv1,
+    drv2,
+    drv3,
+    drv4,
+    drv5,
     productAccountKey,
     nextPriceAccountKey,
     aggregatePriceUpdaterAccountKey,
