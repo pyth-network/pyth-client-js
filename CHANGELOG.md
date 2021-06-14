@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0
+
+### Added
+
+Support for v2 account structure
+
+### Removed
+
+Support for v1 account structure
+
 ## 1.0.7
 
 ### Changed
