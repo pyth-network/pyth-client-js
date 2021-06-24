@@ -3,11 +3,12 @@ import { Buffer } from 'buffer'
 import { readBigInt64LE, readBigUInt64LE } from './readBig'
 
 export const Magic = 0xa1b2c3d4
-export const Version1 = 1
-export const Version = Version1
+export const Version2 = 2
+export const Version = Version2
 export const PriceStatus = ['Unknown', 'Trading', 'Halted', 'Auction']
 export const CorpAction = ['NoCorpAct']
-export const PriceType = ['Unknown', 'Price', 'TWAP', 'Volatility']
+export const PriceType = ['Unknown', 'Price']
+export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
 
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
@@ -59,6 +60,22 @@ export interface PriceData extends Base, Price {
   numComponentPrices: number;
   currentSlot: bigint;
   validSlot: bigint;
+  twapComponent: bigint;
+  twap: number;
+  avolComponent: bigint;
+  avol: number;
+  drv0Component: bigint;
+  drv0: number;
+  drv1Component: bigint;
+  drv1: number;
+  drv2Component: bigint;
+  drv2: number;
+  drv3Component: bigint;
+  drv3: number;
+  drv4Component: bigint;
+  drv4: number;
+  drv5Component: bigint;
+  drv5: number;
   productAccountKey: PublicKey;
   nextPriceAccountKey: PublicKey | null;
   aggregatePriceUpdaterAccountKey: PublicKey;
@@ -175,16 +192,35 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const currentSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
   const validSlot = readBigUInt64LE(data, 40)
+  // time-weighted average price
+  const twapComponent = readBigInt64LE(data, 48)
+  const twap = Number(twapComponent) * 10 ** exponent
+  // annualized price volatility
+  const avolComponent = readBigUInt64LE(data, 56)
+  const avol = Number(avolComponent) * 10 ** exponent
+  // space for future derived values
+  const drv0Component = readBigInt64LE(data, 64)
+  const drv0 = Number(drv0Component) * 10 ** exponent
+  const drv1Component = readBigInt64LE(data, 72)
+  const drv1 = Number(drv1Component) * 10 ** exponent
+  const drv2Component = readBigInt64LE(data, 80)
+  const drv2 = Number(drv2Component) * 10 ** exponent
+  const drv3Component = readBigInt64LE(data, 88)
+  const drv3 = Number(drv3Component) * 10 ** exponent
+  const drv4Component = readBigInt64LE(data, 96)
+  const drv4 = Number(drv4Component) * 10 ** exponent
+  const drv5Component = readBigInt64LE(data, 104)
+  const drv5 = Number(drv5Component) * 10 ** exponent
   // product id / reference account
-  const productAccountKey = new PublicKey(data.slice(48, 80))
+  const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
-  const nextPriceAccountKey = PKorNull(data.slice(80, 112))
+  const nextPriceAccountKey = PKorNull(data.slice(144, 176))
   // aggregate price updater
-  const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(112, 144))
-  const aggregatePriceInfo = parsePriceInfo(data.slice(144, 176), exponent)
-  // price components - up to 16
-  const priceComponents: PriceComponent[] = []
-  let offset = 176
+  const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(176, 208))
+  const aggregatePriceInfo = parsePriceInfo(data.slice(208, 240), exponent)
+  // price components - up to 32
+  const priceComponents = []
+  let offset = 240
   let shouldContinue = true
   while (offset < data.length && shouldContinue) {
     const publisher = PKorNull(data.slice(offset, offset + 32))
@@ -209,6 +245,22 @@ export const parsePriceData = (data: Buffer): PriceData => {
     numComponentPrices,
     currentSlot,
     validSlot,
+    twapComponent,
+    twap,
+    avolComponent,
+    avol,
+    drv0Component,
+    drv0,
+    drv1Component,
+    drv1,
+    drv2Component,
+    drv2,
+    drv3Component,
+    drv3,
+    drv4Component,
+    drv4,
+    drv5Component,
+    drv5,
     productAccountKey,
     nextPriceAccountKey,
     aggregatePriceUpdaterAccountKey,

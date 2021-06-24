@@ -4,7 +4,7 @@ import { Magic, parseProductData, Version } from '../index'
 test('Product', (done) => {
   jest.setTimeout(60000)
   const url = clusterApiUrl('devnet')
-  const ethProductKey = 'HtwD2SutRJVatzAsnvRRjSujQFNdQodzF1FKo54NEzrs'
+  const ethProductKey = '2ciUuGZiee5macAMeQ7bHGTJtwcYTgnt6jdmQnnKZrfu'
   const connection = new Connection(url)
   const publicKey = new PublicKey(ethProductKey)
   connection
