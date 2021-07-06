@@ -219,7 +219,7 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(176, 208))
   const aggregatePriceInfo = parsePriceInfo(data.slice(208, 240), exponent)
   // price components - up to 32
-  const priceComponents = []
+  const priceComponents: PriceComponent[] = []
   let offset = 240
   let shouldContinue = true
   while (offset < data.length && shouldContinue) {
