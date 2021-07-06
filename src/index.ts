@@ -14,71 +14,71 @@ const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
 
 export interface Base {
-  magic: number;
-  version: number;
-  type: number;
-  size: number;
+  magic: number
+  version: number
+  type: number
+  size: number
 }
 
 export interface MappingData extends Base {
-  nextMappingAccount: PublicKey | null;
-  productAccountKeys: PublicKey[],
+  nextMappingAccount: PublicKey | null
+  productAccountKeys: PublicKey[]
 }
 
 export interface Product {
-  symbol: string;
-  asset_type: string;
-  quote_currency: string;
-  tenor: string;
+  symbol: string
+  asset_type: string
+  quote_currency: string
+  tenor: string
   [index: string]: string
 }
 
 export interface ProductData extends Base {
-  priceAccountKey: PublicKey;
-  product: Product,
+  priceAccountKey: PublicKey
+  product: Product
 }
 
 export interface Price {
-  priceComponent: bigint;
-  price: number;
-  confidenceComponent: bigint;
-  confidence: number;
-  status: number;
-  corporateAction: number;
-  publishSlot: bigint;
+  priceComponent: bigint
+  price: number
+  confidenceComponent: bigint
+  confidence: number
+  status: number
+  corporateAction: number
+  publishSlot: bigint
 }
 
 export interface PriceComponent {
-  publisher: PublicKey | null;
-  aggregate: Price;
-  latest: Price;
+  publisher: PublicKey | null
+  aggregate: Price
+  latest: Price
 }
 
 export interface PriceData extends Base, Price {
-  priceType: number;
-  exponent: number;
-  numComponentPrices: number;
-  currentSlot: bigint;
-  validSlot: bigint;
-  twapComponent: bigint;
-  twap: number;
-  avolComponent: bigint;
-  avol: number;
-  drv0Component: bigint;
-  drv0: number;
-  drv1Component: bigint;
-  drv1: number;
-  drv2Component: bigint;
-  drv2: number;
-  drv3Component: bigint;
-  drv3: number;
-  drv4Component: bigint;
-  drv4: number;
-  drv5Component: bigint;
-  drv5: number;
-  productAccountKey: PublicKey;
-  nextPriceAccountKey: PublicKey | null;
-  aggregatePriceUpdaterAccountKey: PublicKey;
+  priceType: number
+  exponent: number
+  numComponentPrices: number
+  currentSlot: bigint
+  validSlot: bigint
+  twapComponent: bigint
+  twap: number
+  avolComponent: bigint
+  avol: number
+  drv0Component: bigint
+  drv0: number
+  drv1Component: bigint
+  drv1: number
+  drv2Component: bigint
+  drv2: number
+  drv3Component: bigint
+  drv3: number
+  drv4Component: bigint
+  drv4: number
+  drv5Component: bigint
+  drv5: number
+  productAccountKey: PublicKey
+  nextPriceAccountKey: PublicKey | null
+  aggregatePriceUpdaterAccountKey: PublicKey
   priceComponents: PriceComponent[]
 }
 
