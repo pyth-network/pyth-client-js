@@ -13,7 +13,76 @@ export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
 
-export const parseMappingData = (data: Buffer) => {
+export interface Base {
+  magic: number;
+  version: number;
+  type: number;
+  size: number;
+}
+
+export interface MappingData extends Base {
+  nextMappingAccount: PublicKey | null;
+  productAccountKeys: PublicKey[],
+}
+
+export interface Product {
+  symbol: string;
+  asset_type: string;
+  quote_currency: string;
+  tenor: string;
+  [index: string]: string
+}
+
+export interface ProductData extends Base {
+  priceAccountKey: PublicKey;
+  product: Product,
+}
+
+export interface Price {
+  priceComponent: bigint;
+  price: number;
+  confidenceComponent: bigint;
+  confidence: number;
+  status: number;
+  corporateAction: number;
+  publishSlot: bigint;
+}
+
+export interface PriceComponent {
+  publisher: PublicKey | null;
+  aggregate: Price;
+  latest: Price;
+}
+
+export interface PriceData extends Base, Price {
+  priceType: number;
+  exponent: number;
+  numComponentPrices: number;
+  currentSlot: bigint;
+  validSlot: bigint;
+  twapComponent: bigint;
+  twap: number;
+  avolComponent: bigint;
+  avol: number;
+  drv0Component: bigint;
+  drv0: number;
+  drv1Component: bigint;
+  drv1: number;
+  drv2Component: bigint;
+  drv2: number;
+  drv3Component: bigint;
+  drv3: number;
+  drv4Component: bigint;
+  drv4: number;
+  drv5Component: bigint;
+  drv5: number;
+  productAccountKey: PublicKey;
+  nextPriceAccountKey: PublicKey | null;
+  aggregatePriceUpdaterAccountKey: PublicKey;
+  priceComponents: PriceComponent[]
+}
+
+export const parseMappingData = (data: Buffer): MappingData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)
   // program version
@@ -31,7 +100,7 @@ export const parseMappingData = (data: Buffer) => {
   const nextMappingAccount = PKorNull(data.slice(24, 56))
   // read each symbol account
   let offset = 56
-  const productAccountKeys = []
+  const productAccountKeys: PublicKey[] = []
   for (let i = 0; i < numProducts; i++) {
     const productAccountBytes = data.slice(offset, offset + 32)
     const productAccountKey = new PublicKey(productAccountBytes)
@@ -48,11 +117,7 @@ export const parseMappingData = (data: Buffer) => {
   }
 }
 
-interface ProductAttributes {
-  [index: string]: string
-}
-
-export const parseProductData = (data: Buffer) => {
+export const parseProductData = (data: Buffer): ProductData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)
   // program version
@@ -64,7 +129,7 @@ export const parseProductData = (data: Buffer) => {
   // first price account in list
   const priceAccountBytes = data.slice(16, 48)
   const priceAccountKey = new PublicKey(priceAccountBytes)
-  const product: ProductAttributes = {}
+  const product = {} as Product
   let idx = 48
   while (idx < size) {
     const keyLength = data[idx]
@@ -82,7 +147,7 @@ export const parseProductData = (data: Buffer) => {
   return { magic, version, type, size, priceAccountKey, product }
 }
 
-const parsePriceInfo = (data: Buffer, exponent: number) => {
+const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   // aggregate price
   const priceComponent = readBigInt64LE(data, 0)
   const price = Number(priceComponent) * 10 ** exponent
@@ -106,7 +171,7 @@ const parsePriceInfo = (data: Buffer, exponent: number) => {
   }
 }
 
-export const parsePriceData = (data: Buffer) => {
+export const parsePriceData = (data: Buffer): PriceData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)
   // program version
@@ -154,7 +219,7 @@ export const parsePriceData = (data: Buffer) => {
   const aggregatePriceUpdaterAccountKey = new PublicKey(data.slice(176, 208))
   const aggregatePriceInfo = parsePriceInfo(data.slice(208, 240), exponent)
   // price components - up to 32
-  const priceComponents = []
+  const priceComponents: PriceComponent[] = []
   let offset = 240
   let shouldContinue = true
   while (offset < data.length && shouldContinue) {
