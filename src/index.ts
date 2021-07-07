@@ -1,5 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 import { Buffer } from 'buffer'
+import JSBI from 'jsbi'
 import { readBigInt64LE, readBigUInt64LE } from './readBig'
 
 export const Magic = 0xa1b2c3d4
@@ -39,13 +40,13 @@ export interface ProductData extends Base {
 }
 
 export interface Price {
-  priceComponent: bigint
+  priceComponent: JSBI
   price: number
-  confidenceComponent: bigint
+  confidenceComponent: JSBI
   confidence: number
   status: number
   corporateAction: number
-  publishSlot: bigint
+  publishSlot: JSBI
 }
 
 export interface PriceComponent {
@@ -58,23 +59,23 @@ export interface PriceData extends Base, Price {
   priceType: number
   exponent: number
   numComponentPrices: number
-  currentSlot: bigint
-  validSlot: bigint
-  twapComponent: bigint
+  currentSlot: JSBI
+  validSlot: JSBI
+  twapComponent: JSBI
   twap: number
-  avolComponent: bigint
+  avolComponent: JSBI
   avol: number
-  drv0Component: bigint
+  drv0Component: JSBI
   drv0: number
-  drv1Component: bigint
+  drv1Component: JSBI
   drv1: number
-  drv2Component: bigint
+  drv2Component: JSBI
   drv2: number
-  drv3Component: bigint
+  drv3Component: JSBI
   drv3: number
-  drv4Component: bigint
+  drv4Component: JSBI
   drv4: number
-  drv5Component: bigint
+  drv5Component: JSBI
   drv5: number
   productAccountKey: PublicKey
   nextPriceAccountKey: PublicKey | null

@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer'
+import JSBI from 'jsbi'
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/errors.js#L758
 const ERR_BUFFER_OUT_OF_BOUNDS = () => new Error('Attempt to access memory outside buffer bounds')
@@ -29,21 +29,21 @@ function boundsError(value: number, length: number) {
 }
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L129-L145
-export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
+export function readBigInt64LE(buffer: Buffer, offset = 0): JSBI {
   validateNumber(offset, 'offset')
   const first = buffer[offset]
   const last = buffer[offset + 7]
   if (first === undefined || last === undefined) boundsError(offset, buffer.length - 8)
   // tslint:disable-next-line:no-bitwise
   const val = buffer[offset + 4] + buffer[offset + 5] * 2 ** 8 + buffer[offset + 6] * 2 ** 16 + (last << 24) // Overflow
-  return (
-    (BigInt(val) << BigInt(32)) + // tslint:disable-line:no-bitwise
-    BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24)
+  return JSBI.add(
+    JSBI.leftShift(JSBI.BigInt(val), JSBI.BigInt(32)), // tslint:disable-line:no-bitwise
+    JSBI.BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24),
   )
 }
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L89-L107
-export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
+export function readBigUInt64LE(buffer: Buffer, offset = 0): JSBI {
   validateNumber(offset, 'offset')
   const first = buffer[offset]
   const last = buffer[offset + 7]
@@ -53,5 +53,5 @@ export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
 
   const hi = buffer[++offset] + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + last * 2 ** 24
 
-  return BigInt(lo) + (BigInt(hi) << BigInt(32)) // tslint:disable-line:no-bitwise
+  return JSBI.add(JSBI.BigInt(lo), JSBI.leftShift(JSBI.BigInt(hi), JSBI.BigInt(32))) // tslint:disable-line:no-bitwise
 }
