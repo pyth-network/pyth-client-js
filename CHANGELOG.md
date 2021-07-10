@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+
+Support new twap and twac
+
+## 2.0.1
+
+### Added
+
+Types
+
 ## 2.0.0
 
 ### Added
