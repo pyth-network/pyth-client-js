@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0
+
+### Added
+
+numQuoters
+
 ## 2.1.0
 
 ### Added

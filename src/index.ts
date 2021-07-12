@@ -65,6 +65,7 @@ export interface PriceData extends Base, Price {
   priceType: number
   exponent: number
   numComponentPrices: number
+  numQuoters: number
   lastSlot: bigint
   validSlot: bigint
   twap: Ema
@@ -199,8 +200,8 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const exponent = data.readInt32LE(20)
   // number of component prices
   const numComponentPrices = data.readUInt32LE(24)
-  // unused
-  // const unused = accountInfo.data.readUInt32LE(28)
+  // number of quoters that make up aggregate
+  const numQuoters = data.readUInt32LE(28)
   // slot of last valid (not unknown) aggregate price
   const lastSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
@@ -255,6 +256,7 @@ export const parsePriceData = (data: Buffer): PriceData => {
     priceType,
     exponent,
     numComponentPrices,
+    numQuoters,
     lastSlot,
     validSlot,
     twap,
