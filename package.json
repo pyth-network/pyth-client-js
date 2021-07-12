@@ -1,6 +1,6 @@
 {
   "name": "@pythnetwork/client",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Pyth price oracle data structures",
   "homepage": "https://pyth.network",
   "main": "lib/index.js",
