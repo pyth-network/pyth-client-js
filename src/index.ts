@@ -11,7 +11,7 @@ export const PriceStatus = ['Unknown', 'Trading', 'Halted', 'Auction']
 export const CorpAction = ['NoCorpAct']
 export const PriceType = ['Unknown', 'Price']
 export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
-export const AccountType = ['Mapping', 'Product', 'Price', 'Test']
+export const AccountType = ['Unknown', 'Mapping', 'Product', 'Price', 'Test']
 
 /** Number of slots that can pass before a publisher's price is no longer included in the aggregate. */
 export const MAX_SLOT_DIFFERENCE = 25

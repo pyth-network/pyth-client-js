@@ -18,7 +18,8 @@
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "example": "npm run build && node lib/example_usage.js"
   },
   "keywords": [
     "pyth",

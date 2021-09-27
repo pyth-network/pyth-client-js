@@ -24,25 +24,27 @@ $ yarn add @pythnetwork/client
 
 ## Example Usage
 
-This library provides a subscription model for consuming all price updates:
+This library provides a subscription model for consuming price updates:
 
 ```javascript
-import { Connection, PublicKey } from '@solana/web3.js'
-import { parseMappingData, parsePriceData, parseProductData } from '@pythnetwork/client'
-import { getPythProgramKeyForCluster } from '@pythnetwork/client'
-
-const connection = new Connection(SOLANA_CLUSTER_URL)
-const pythPublicKey = getPythProgramKeyForCluster(CLUSTER)
-
-const pythConnection = new PythConnection(connection, pythPublicKey) 
+const pythConnection = new PythConnection(solanaWeb3Connection, getPythProgramKeyForCluster(solanaClusterName))
 pythConnection.onPriceChange((product, price) => {
   // sample output:
   // SRM/USD: $8.68725 ±$0.0131
   console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
 })
 
+// Start listening for price change events.
 pythConnection.start()
 ```
+
+The `onPriceChange` callback will be invoked every time a Pyth price gets updated.
+This callback gets two arguments:
+* `price` contains the official Pyth price and confidence, along with the component prices that were combined to produce this result.
+* `product` contains metadata about the price feed, such as the symbol (e.g., "BTC/USD") and the number of decimal points.
+
+See `src/example_usage.ts` for a runnable example of the above usage.
+You can run this example with `npm run example`.
 
 You may also register to specific account updates using `connection.onAccountChange` in the solana web3 API, then
 use the methods in `index.ts` to parse the on-chain data structures into Javascript-friendly objects.
