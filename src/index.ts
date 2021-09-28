@@ -2,6 +2,8 @@ import { PublicKey } from '@solana/web3.js'
 import { Buffer } from 'buffer'
 import { readBigInt64LE, readBigUInt64LE } from './readBig'
 
+/** Constants. This section must be kept in sync with the on-chain program. */
+
 export const Magic = 0xa1b2c3d4
 export const Version2 = 2
 export const Version = Version2
@@ -9,6 +11,10 @@ export const PriceStatus = ['Unknown', 'Trading', 'Halted', 'Auction']
 export const CorpAction = ['NoCorpAct']
 export const PriceType = ['Unknown', 'Price']
 export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
+export const AccountType = ['Unknown', 'Mapping', 'Product', 'Price', 'Test']
+
+/** Number of slots that can pass before a publisher's price is no longer included in the aggregate. */
+export const MAX_SLOT_DIFFERENCE = 25
 
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
@@ -84,6 +90,27 @@ export interface PriceData extends Base, Price {
   drv3Component: bigint
   drv3: number
   priceComponents: PriceComponent[]
+}
+
+/** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
+export function parseBaseData(data: Buffer): Base | undefined {
+  // data is too short to have the magic number.
+  if (data.byteLength < 4) {
+    return undefined
+  }
+
+  const magic = data.readUInt32LE(0)
+  if (magic == Magic) {
+    // program version
+    const version = data.readUInt32LE(4)
+    // account type
+    const type = data.readUInt32LE(8)
+    // account used size
+    const size = data.readUInt32LE(12)
+    return { magic, version, type, size }
+  } else {
+    return undefined
+  }
 }
 
 export const parseMappingData = (data: Buffer): MappingData => {

@@ -1,7 +1,7 @@
 {
   "name": "@pythnetwork/client",
-  "version": "2.2.0",
-  "description": "Pyth price oracle data structures",
+  "version": "2.3.0",
+  "description": "Client for consuming Pyth price data",
   "homepage": "https://pyth.network",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,7 +18,8 @@
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "example": "npm run build && node lib/example_usage.js"
   },
   "keywords": [
     "pyth",
