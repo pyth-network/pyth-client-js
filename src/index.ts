@@ -100,7 +100,7 @@ export function parseBaseData(data: Buffer): Base | undefined {
   }
 
   const magic = data.readUInt32LE(0)
-  if (magic == Magic) {
+  if (magic === Magic) {
     // program version
     const version = data.readUInt32LE(4)
     // account type
