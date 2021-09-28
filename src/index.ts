@@ -306,9 +306,7 @@ export const parsePriceData = (data: Buffer): PriceData => {
   }
 }
 
-if ("foo" == "bar") {
-  console.log("hey")
-}
+console.log("hey")
 
 export { PythConnection } from './PythConnection';
 export { getPythProgramKeyForCluster } from './cluster';
