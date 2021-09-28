@@ -47,7 +47,7 @@ export class PythConnection {
     }
 
     const priceData = parsePriceData(account.data)
-    for (let callback of this.callbacks) {
+    for (const callback of this.callbacks) {
       callback(product, priceData)
     }
   }
@@ -90,7 +90,7 @@ export class PythConnection {
    */
   public async start() {
     const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
-    for (let account of accounts) {
+    for (const account of accounts) {
       this.handleAccount(account.pubkey, account.account, true)
     }
 
