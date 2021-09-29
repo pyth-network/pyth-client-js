@@ -51,6 +51,5 @@ use the methods in `index.ts` to parse the on-chain data structures into Javascr
 
 ## Releases
 
-In order to release a new version of this library and publish it to npm, simply increment the version number in `package.json`, then create a new release on github with the same version number. 
-The github repository has an action configured to automatically publish this package to npm whenever a new release is tagged.
-Once the action is approved by an administrator, the package will be published.
+In order to release a new version of this library and publish it to npm, simply run `npm version <new version number>` and push your changes to github.
+Once your change is merged into `main`, a github action will automatically publish a new version of the package to npm.
