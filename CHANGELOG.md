@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.3.2
+
+Added PythConnection 
+
 ## 2.2.0
 
 ### Added
