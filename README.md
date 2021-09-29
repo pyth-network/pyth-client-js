@@ -48,3 +48,9 @@ You can run this example with `npm run example`.
 
 You may also register to specific account updates using `connection.onAccountChange` in the solana web3 API, then
 use the methods in `index.ts` to parse the on-chain data structures into Javascript-friendly objects.
+
+## Releases
+
+In order to release a new version of this library and publish it to npm, simply increment the version number in `package.json`, then create a new release on github with the same version number. 
+The github repository has an action configured to automatically publish this package to npm whenever a new release is tagged.
+Once the action is approved by an administrator, the package will be published.
