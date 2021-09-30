@@ -48,3 +48,10 @@ You can run this example with `npm run example`.
 
 You may also register to specific account updates using `connection.onAccountChange` in the solana web3 API, then
 use the methods in `index.ts` to parse the on-chain data structures into Javascript-friendly objects.
+
+## Releases
+
+In order to release a new version of this library and publish it to npm, follow these steps: 
+1. Update `CHANGELOG.md` with a description of the changes in this version.
+2. Run `npm version <new version number>`. This command will update the version of the package, tag the branch in git, and push your changes to github.
+3. Once your change is merged into `main`, a github action will automatically publish a new version of the package to npm.
