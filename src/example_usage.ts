@@ -10,8 +10,13 @@ const pythConnection = new PythConnection(connection, pythPublicKey)
 pythConnection.onPriceChange((product, price) => {
   // sample output:
   // SRM/USD: $8.68725 ±$0.0131
-  // tslint:disable-next-line:no-console
-  console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
+  if (price.price && price.confidence) {
+    // tslint:disable-next-line:no-console
+    console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
+  } else {
+    // tslint:disable-next-line:no-console
+    console.log(`${product.symbol}: price currently unavailable`)
+  }
 })
 
 // tslint:disable-next-line:no-console

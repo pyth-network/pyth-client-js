@@ -67,7 +67,7 @@ export interface Ema {
   denominator: bigint
 }
 
-export interface PriceData extends Base, Price {
+export interface PriceData extends Base {
   priceType: number
   exponent: number
   numComponentPrices: number
@@ -90,6 +90,15 @@ export interface PriceData extends Base, Price {
   drv3Component: bigint
   drv3: number
   priceComponents: PriceComponent[]
+  aggregate: Price,
+  // The current price and confidence. The typical use of this interface is to consume these two fields.
+  // If undefined, Pyth does not currently have price information for this product. This condition can
+  // happen for various reasons (e.g., US equity market is closed, or insufficient publishers), and your
+  // application should handle it gracefully. Note that other raw price information fields (such as
+  // aggregate.price) may be defined even if this is undefined; you most likely should not use those fields,
+  // as their value can be arbitrary when this is undefined.
+  price: number | undefined
+  confidence: number | undefined,
 }
 
 /** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
@@ -257,7 +266,14 @@ export const parsePriceData = (data: Buffer): PriceData => {
   // space for future derived values
   const drv3Component = readBigInt64LE(data, 200)
   const drv3 = Number(drv3Component) * 10 ** exponent
-  const aggregatePriceInfo = parsePriceInfo(data.slice(208, 240), exponent)
+  const aggregate = parsePriceInfo(data.slice(208, 240), exponent)
+
+  let price, confidence = undefined
+  if (aggregate.status == 1) {
+    price = aggregate.price
+    confidence = aggregate.confidence
+  }
+
   // price components - up to 32
   const priceComponents: PriceComponent[] = []
   let offset = 240
@@ -275,6 +291,7 @@ export const parsePriceData = (data: Buffer): PriceData => {
       shouldContinue = false
     }
   }
+
   return {
     magic,
     version,
@@ -301,8 +318,10 @@ export const parsePriceData = (data: Buffer): PriceData => {
     previousConfidence,
     drv3Component,
     drv3,
-    ...aggregatePriceInfo,
+    aggregate,
     priceComponents,
+    price,
+    confidence
   }
 }
 
