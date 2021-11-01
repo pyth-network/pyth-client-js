@@ -268,8 +268,9 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const drv3 = Number(drv3Component) * 10 ** exponent
   const aggregate = parsePriceInfo(data.slice(208, 240), exponent)
 
-  let price, confidence = undefined
-  if (aggregate.status == 1) {
+  let price
+  let confidence
+  if (aggregate.status === 1) {
     price = aggregate.price
     confidence = aggregate.confidence
   }
@@ -282,11 +283,11 @@ export const parsePriceData = (data: Buffer): PriceData => {
     const publisher = PKorNull(data.slice(offset, offset + 32))
     offset += 32
     if (publisher) {
-      const aggregate = parsePriceInfo(data.slice(offset, offset + 32), exponent)
+      const componentAggregate = parsePriceInfo(data.slice(offset, offset + 32), exponent)
       offset += 32
       const latest = parsePriceInfo(data.slice(offset, offset + 32), exponent)
       offset += 32
-      priceComponents.push({ publisher, aggregate, latest })
+      priceComponents.push({ publisher, aggregate: componentAggregate, latest })
     } else {
       shouldContinue = false
     }
