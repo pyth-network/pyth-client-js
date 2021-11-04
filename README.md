@@ -54,4 +54,4 @@ use the methods in `index.ts` to parse the on-chain data structures into Javascr
 In order to release a new version of this library and publish it to npm, follow these steps: 
 1. Update `CHANGELOG.md` with a description of the changes in this version.
 2. Run `npm version <new version number>`. This command will update the version of the package, tag the branch in git, and push your changes to github.
-3. Once your change is merged into `main`, a github action will automatically publish a new version of the package to npm.
+3. Once your change is merged into `main`, create a release, and a github action will automatically publish a new version of the package to npm.
