@@ -1,8 +1,26 @@
 # Changelog
 
+### 2.5.0
+
+### Changed
+
+Restructure `drv2` field in `PriceData` to `minPublishers` and other future drv values
+
+### 2.4.0
+
+### Changed
+
+Product only define `price` and `confidence` fields if it currently has a valid price
+
+### Fixed
+
+Memory leak in an underlying library
+
 ### 2.3.2
 
-Added PythConnection 
+### Added
+
+PythConnection 
 
 ## 2.2.0
 
