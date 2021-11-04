@@ -78,8 +78,10 @@ export interface PriceData extends Base {
   twac: Ema
   drv1Component: bigint
   drv1: number
-  drv2Component: bigint
+  minPublishers: number
   drv2: number
+  drv3: number
+  drv4: number
   productAccountKey: PublicKey
   nextPriceAccountKey: PublicKey | null
   previousSlot: bigint
@@ -87,8 +89,8 @@ export interface PriceData extends Base {
   previousPrice: number
   previousConfidenceComponent: bigint
   previousConfidence: number
-  drv3Component: bigint
-  drv3: number
+  drv5Component: bigint
+  drv5: number
   priceComponents: PriceComponent[]
   aggregate: Price,
   // The current price and confidence. The typical use of this interface is to consume these two fields.
@@ -249,8 +251,14 @@ export const parsePriceData = (data: Buffer): PriceData => {
   // space for future derived values
   const drv1Component = readBigInt64LE(data, 96)
   const drv1 = Number(drv1Component) * 10 ** exponent
-  const drv2Component = readBigInt64LE(data, 104)
-  const drv2 = Number(drv2Component) * 10 ** exponent
+  // minimum number of publishers for status to be TRADING
+  const minPublishers = data.readUInt8(104)
+  // space for future derived values
+  const drv2 = data.readInt8(105)
+  // space for future derived values
+  const drv3 = data.readInt16LE(106)
+  // space for future derived values
+  const drv4 = data.readInt32LE(108)
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
@@ -264,8 +272,8 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const previousConfidenceComponent = readBigUInt64LE(data, 192)
   const previousConfidence = Number(previousConfidenceComponent) * 10 ** exponent
   // space for future derived values
-  const drv3Component = readBigInt64LE(data, 200)
-  const drv3 = Number(drv3Component) * 10 ** exponent
+  const drv5Component = readBigInt64LE(data, 200)
+  const drv5 = Number(drv5Component) * 10 ** exponent
   const aggregate = parsePriceInfo(data.slice(208, 240), exponent)
 
   let price
@@ -308,8 +316,10 @@ export const parsePriceData = (data: Buffer): PriceData => {
     twac,
     drv1Component,
     drv1,
-    drv2Component,
+    minPublishers,
     drv2,
+    drv3,
+    drv4,
     productAccountKey,
     nextPriceAccountKey,
     previousSlot,
@@ -317,8 +327,8 @@ export const parsePriceData = (data: Buffer): PriceData => {
     previousPrice,
     previousConfidenceComponent,
     previousConfidence,
-    drv3Component,
-    drv3,
+    drv5Component,
+    drv5,
     aggregate,
     priceComponents,
     price,
