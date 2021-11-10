@@ -9,5 +9,9 @@ const clusterToPythProgramKey: Record<Cluster, string> = {
 
 /** Gets the public key of the Pyth program running on the given cluster. */
 export function getPythProgramKeyForCluster(cluster: Cluster): PublicKey {
-  return new PublicKey(clusterToPythProgramKey[cluster]);
+  if (clusterToPythProgramKey[cluster] !== undefined) {
+    return new PublicKey(clusterToPythProgramKey[cluster]);
+  } else {
+    throw new Error(`Invalid Solana cluster name: ${cluster}. Valid options are: ${JSON.stringify(Object.keys(clusterToPythProgramKey))}`)
+  }
 }
