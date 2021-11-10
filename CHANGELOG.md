@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.5.1
+
+### Changed
+
+Improved error message when passing an invalid cluster name to `pythProgramKeyForCluster`
+
 ### 2.5.0
 
 ### Changed
