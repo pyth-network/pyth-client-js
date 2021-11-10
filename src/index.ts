@@ -92,7 +92,7 @@ export interface PriceData extends Base {
   drv5Component: bigint
   drv5: number
   priceComponents: PriceComponent[]
-  aggregate: Price,
+  aggregate: Price
   // The current price and confidence. The typical use of this interface is to consume these two fields.
   // If undefined, Pyth does not currently have price information for this product. This condition can
   // happen for various reasons (e.g., US equity market is closed, or insufficient publishers), and your
@@ -100,7 +100,7 @@ export interface PriceData extends Base {
   // aggregate.price) may be defined even if this is undefined; you most likely should not use those fields,
   // as their value can be arbitrary when this is undefined.
   price: number | undefined
-  confidence: number | undefined,
+  confidence: number | undefined
 }
 
 /** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
@@ -332,9 +332,9 @@ export const parsePriceData = (data: Buffer): PriceData => {
     aggregate,
     priceComponents,
     price,
-    confidence
+    confidence,
   }
 }
 
-export { PythConnection } from './PythConnection';
-export { getPythProgramKeyForCluster } from './cluster';
+export { PythConnection } from './PythConnection'
+export { getPythProgramKeyForCluster } from './cluster'
