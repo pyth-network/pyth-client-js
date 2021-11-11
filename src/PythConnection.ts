@@ -1,11 +1,17 @@
-import {Connection, PublicKey, clusterApiUrl, Cluster, Commitment, AccountInfo, Account} from '@solana/web3.js'
+import { Connection, PublicKey, clusterApiUrl, Cluster, Commitment, AccountInfo, Account } from '@solana/web3.js'
 import {
-  Base, Magic,
+  Base,
+  Magic,
   parseMappingData,
   parseBaseData,
   parsePriceData,
-  parseProductData, Price, PriceData, Product, ProductData,
-  Version, AccountType,
+  parseProductData,
+  Price,
+  PriceData,
+  Product,
+  ProductData,
+  Version,
+  AccountType,
 } from './index'
 
 const ONES = '11111111111111111111111111111111'
@@ -31,7 +37,7 @@ export class PythConnection {
   callbacks: PythPriceCallback[] = []
 
   private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>) {
-    const {priceAccountKey, type, product} = parseProductData(account.data)
+    const { priceAccountKey, type, product } = parseProductData(account.data)
     this.productAccountKeyToProduct[key.toString()] = product
     if (priceAccountKey.toString() !== ONES) {
       this.priceAccountKeyToProductAccountKey[priceAccountKey.toString()] = key.toString()
@@ -43,7 +49,9 @@ export class PythConnection {
     if (product === undefined) {
       // This shouldn't happen since we're subscribed to all of the program's accounts,
       // but let's be good defensive programmers.
-      throw new Error('Got a price update for an unknown product. This is a bug in the library, please report it to the developers.')
+      throw new Error(
+        'Got a price update for an unknown product. This is a bug in the library, please report it to the developers.',
+      )
     }
 
     const priceData = parsePriceData(account.data)
@@ -59,17 +67,17 @@ export class PythConnection {
       switch (AccountType[base.type]) {
         case 'Mapping':
           // We can skip these because we're going to get every account owned by this program anyway.
-          break;
+          break
         case 'Product':
           this.handleProductAccount(key, account)
-          break;
+          break
         case 'Price':
           if (!productOnly) {
             this.handlePriceAccount(key, account)
           }
-          break;
+          break
         case 'Test':
-          break;
+          break
         default:
           throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
       }

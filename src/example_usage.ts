@@ -1,4 +1,4 @@
-import {Cluster, clusterApiUrl, Connection, PublicKey} from '@solana/web3.js'
+import { Cluster, clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
 import { PythConnection } from './PythConnection'
 import { getPythProgramKeyForCluster } from './cluster'
 
@@ -20,5 +20,5 @@ pythConnection.onPriceChange((product, price) => {
 })
 
 // tslint:disable-next-line:no-console
-console.log("Reading from Pyth price feed...")
+console.log('Reading from Pyth price feed...')
 pythConnection.start()
