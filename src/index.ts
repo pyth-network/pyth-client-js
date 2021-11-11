@@ -338,3 +338,4 @@ export const parsePriceData = (data: Buffer): PriceData => {
 
 export { PythConnection } from './PythConnection';
 export { getPythProgramKeyForCluster } from './cluster';
+export { PythNetworkHTTPClient } from './PythNetworkHTTPClient';
