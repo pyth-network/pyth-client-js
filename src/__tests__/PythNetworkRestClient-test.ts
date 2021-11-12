@@ -1,22 +1,25 @@
 import { clusterApiUrl, Connection } from "@solana/web3.js";
-import { getPythProgramKeyForCluster, PythNetworkHTTPClient } from "..";
+import { getPythProgramKeyForCluster, PythHttpClient } from "..";
 
-test('PythNetworkHTTPClientCall', done => {
+test('PythHttpClientCall', done => {
     jest.setTimeout(20000)
     try {
         const programKey = getPythProgramKeyForCluster('testnet');
         const currentConnection = new Connection(clusterApiUrl('testnet'));
-        const pyth_client = new PythNetworkHTTPClient(currentConnection, programKey);
+        const pyth_client = new PythHttpClient(currentConnection, programKey);
         pyth_client.getData().then(
-            value => {
+            result => {
                 try {
-                    console.log("products number: ", Object.keys(pyth_client.priceAccountKeyToProductAccountKey).length)
-                    console.log("asset types: ", pyth_client.assetsTypes());
-                    console.log("asset symbols: ", pyth_client.productsSymbols());
-                    const products = pyth_client.productsWithSymbol("SOL/USD");
+                    console.log("products number: ", result.products.length)
+                    console.log("asset types: ", result.assetsTypes);
+                    console.log("product symbols: ", result.productsSymbols);
+
+                    // Find a product with symbol "SOL/USD"
+                    const products = result.products.filter(p => p.symbol === "SOL/USD");
                     expect(products.length).toBeGreaterThan(0);
     
-                    const price = pyth_client.getProductPrice(products[0].symbol);
+                    // Find product prices
+                    const price = result.productPrice.get(products[0].symbol);
                     expect(price).toBeDefined();
     
                     console.log("products", products)

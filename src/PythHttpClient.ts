@@ -1,11 +1,19 @@
 import { AccountInfo, Cluster, clusterApiUrl, Commitment, Connection, PublicKey } from "@solana/web3.js";
-import { Product, PriceData, getPythProgramKeyForCluster, parseProductData, parsePriceData, parseBaseData, AccountType } from ".";
+import { Product, PriceData, getPythProgramKeyForCluster, parseProductData, parsePriceData, parseBaseData, AccountType, ProductData } from ".";
 
 const ONES = '1111111111111111111111111111111';
 
 interface PriceRawData {
     key: PublicKey;
     account: AccountInfo<Buffer>;
+}
+
+export interface PythHttpClientResult {
+    assetsTypes: string[];
+    productsSymbols: string[];
+    products: Product[];
+    productPrice: Map<string, PriceData>;
+    productPriceArray: PriceData[];
 }
 
 /**
@@ -31,15 +39,16 @@ export class PythHttpClient {
         this.pythProgramKey = pythProgramKey;
         this.commitment = commitment;
 
-        this.priceQueue = [];
         this.productAccountKeyToProduct = {};
+        this.priceAccountKeyToProductAccountKey = {}
+
         this.assetTypes = new Set();
         this.productSymbols = new Set();
         this.products = new Set();
         this.productPrice = new Map<string, PriceData>();
         this.productPriceArray = [];
-        this.priceAccountKeyToProductAccountKey = {}
 
+        this.priceQueue = [];
     }
 
     private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>) {
@@ -96,7 +105,18 @@ export class PythHttpClient {
         }
     }
 
-    public async getData(): Promise<PriceData[]> {
+    /*
+    * Get Pyth Network account information and return actual price state.
+    * The result contains lists of asset types, product symbols and their prices.
+    */
+    public async getData(): Promise<PythHttpClientResult> {
+        this.productAccountKeyToProduct = {}
+        this.priceAccountKeyToProductAccountKey = {}
+
+        this.assetTypes = new Set();
+        this.productSymbols = new Set();
+        this.products = new Set()
+        this.productPrice = new Map<string, PriceData>()
         this.productPriceArray = [];
 
         const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
@@ -108,51 +128,13 @@ export class PythHttpClient {
             this.handleAccount(queued.key, queued.account, false)
         }
 
-        return Array.from(this.productPriceArray);
-    }
-
-    public assetsTypes(): string[] {
-        return Array.from(this.assetTypes);
-    }
-
-    public productsSymbols(): string[] {
-        return Array.from(this.productSymbols);
-    }
-
-    public productsWithAssetType(assetType: string): Product[] {
-        if(!this.assetTypes.has(assetType))
-            return [];
-        
-        const result: Product[] = [];
-        this.products.forEach(currentProduct => {
-            if(currentProduct.asset_type === assetType) {
-                result.push(currentProduct)
-            }
-        });
-
-        return result;
-    }
-
-    public productsWithSymbol(productSymbol: string): Product[] {
-        if(!this.productSymbols.has(productSymbol)) {
-            return [];
-        }
-        
-        const result: Product[] = [];
-        this.products.forEach(currentProduct => {
-            if(currentProduct.symbol === productSymbol) {
-                result.push(currentProduct)
-            }
-        });
-
-        return result;
-    }
-
-    public getProductPrice(productSymbol: string): PriceData | undefined {
-        const result = this.productPrice.get(productSymbol);
-
-        if(result === null)
-            return undefined;
+        const result: PythHttpClientResult = {
+            assetsTypes: Array.from(this.assetTypes),
+            productsSymbols: Array.from(this.productSymbols),
+            products: Array.from(this.products),
+            productPrice: this.productPrice,
+            productPriceArray: this.productPriceArray                   
+        };
 
         return result;
     }
