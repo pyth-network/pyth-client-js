@@ -92,9 +92,9 @@ export class PythHttpClient {
             assetTypes: Array.from(assetTypes),
             symbols: Array.from(productSymbols),
             products: Array.from(products),
-            productFromSymbol: productFromSymbol,
-            productPrice: productPrice,
-            prices: prices                   
+            productFromSymbol,
+            productPrice,
+            prices                   
         };
 
         return result;
