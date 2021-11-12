@@ -13,7 +13,7 @@ export interface PythHttpClientResult {
     productsSymbols: string[];
     products: Product[];
     productPrice: Map<string, PriceData>;
-    productPriceArray: PriceData[];
+    prices: PriceData[];
 }
 
 /**
@@ -31,7 +31,7 @@ export class PythHttpClient {
     private productSymbols: Set<string>;
     private products: Set<Product>;
     private productPrice: Map<string, PriceData>;
-    private productPriceArray: PriceData[];
+    private prices: PriceData[];
     public priceAccountKeyToProductAccountKey: Record<string, string>;
 
     constructor(connection: Connection, pythProgramKey: PublicKey, commitment: Commitment = 'finalized') {
@@ -46,7 +46,7 @@ export class PythHttpClient {
         this.productSymbols = new Set();
         this.products = new Set();
         this.productPrice = new Map<string, PriceData>();
-        this.productPriceArray = [];
+        this.prices = [];
 
         this.priceQueue = [];
     }
@@ -73,7 +73,7 @@ export class PythHttpClient {
 
         const priceData = parsePriceData(account.data)     
         this.productPrice.set(product.symbol, priceData);
-        this.productPriceArray.push(priceData);
+        this.prices.push(priceData);
     }    
 
     private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean) {
@@ -117,7 +117,7 @@ export class PythHttpClient {
         this.productSymbols = new Set();
         this.products = new Set()
         this.productPrice = new Map<string, PriceData>()
-        this.productPriceArray = [];
+        this.prices = [];
 
         const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
         for(const account of accounts) {
@@ -133,7 +133,7 @@ export class PythHttpClient {
             productsSymbols: Array.from(this.productSymbols),
             products: Array.from(this.products),
             productPrice: this.productPrice,
-            productPriceArray: this.productPriceArray                   
+            prices: this.prices                   
         };
 
         return result;
