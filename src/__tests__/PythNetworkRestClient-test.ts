@@ -11,8 +11,8 @@ test('PythHttpClientCall', done => {
             result => {
                 try {
                     console.log("products number: ", result.products.length)
-                    console.log("asset types: ", result.assetsTypes);
-                    console.log("product symbols: ", result.productsSymbols);
+                    console.log("asset types: ", result.assetTypes);
+                    console.log("product symbols: ", result.symbols);
 
                     // Find a product with symbol "SOL/USD"
                     const products = result.products.filter(p => p.symbol === "SOL/USD");

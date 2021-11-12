@@ -9,9 +9,10 @@ interface PriceRawData {
 }
 
 export interface PythHttpClientResult {
-    assetsTypes: string[];
-    productsSymbols: string[];
+    assetTypes: string[];
+    symbols: string[];
     products: Product[];
+    productFromSymbol: Map<string, Product>;
     productPrice: Map<string, PriceData>;
     prices: PriceData[];
 }
@@ -25,80 +26,10 @@ export class PythHttpClient {
     pythProgramKey: PublicKey;
     commitment: Commitment;
 
-    private productAccountKeyToProduct: Record<string, Product>;
-    private priceQueue: PriceRawData[];
-    private assetTypes: Set<string>;
-    private productSymbols: Set<string>;
-    private products: Set<Product>;
-    private productPrice: Map<string, PriceData>;
-    private prices: PriceData[];
-    public priceAccountKeyToProductAccountKey: Record<string, string>;
-
     constructor(connection: Connection, pythProgramKey: PublicKey, commitment: Commitment = 'finalized') {
         this.connection = connection;
         this.pythProgramKey = pythProgramKey;
         this.commitment = commitment;
-
-        this.productAccountKeyToProduct = {};
-        this.priceAccountKeyToProductAccountKey = {}
-
-        this.assetTypes = new Set();
-        this.productSymbols = new Set();
-        this.products = new Set();
-        this.productPrice = new Map<string, PriceData>();
-        this.prices = [];
-
-        this.priceQueue = [];
-    }
-
-    private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>) {
-        const {priceAccountKey, type, product} = parseProductData(account.data)
-        this.productAccountKeyToProduct[key.toString()] = product
-        if (priceAccountKey.toString() !== ONES) {
-            this.priceAccountKeyToProductAccountKey[priceAccountKey.toString()] = key.toString()
-        }
-
-        this.assetTypes.add(product.asset_type);
-        this.productSymbols.add(product.symbol);
-        this.products.add(product);
-    }
-
-    private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>) {
-        const product = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
-        if (product === undefined) {
-            // This shouldn't happen since we're subscribed to all of the program's accounts,
-            // but let's be good defensive programmers.
-            throw new Error('Got a price update for an unknown product. This is a bug in the library, please report it to the developers.')
-        }
-
-        const priceData = parsePriceData(account.data)     
-        this.productPrice.set(product.symbol, priceData);
-        this.prices.push(priceData);
-    }    
-
-    private handleAccount(key: PublicKey, account: AccountInfo<Buffer>) {
-        const base = parseBaseData(account.data)
-        // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
-        if (base) {
-            switch (AccountType[base.type]) {
-                case 'Mapping':
-                    // We can skip these because we're going to get every account owned by this program anyway.
-                    break;
-                case 'Product':
-                    this.handleProductAccount(key, account)
-                    break;
-                case 'Price':
-                    this.priceQueue.push({
-                        key: key,
-                        account: account
-                    });
-                    break;
-                case 'Test':
-                    break;
-                default:
-                    throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
-            }
-        }
     }
 
     /*
@@ -106,31 +37,64 @@ export class PythHttpClient {
     * The result contains lists of asset types, product symbols and their prices.
     */
     public async getData(): Promise<PythHttpClientResult> {
-        this.productAccountKeyToProduct = {}
-        this.priceAccountKeyToProductAccountKey = {}
+        const assetTypes = new Set<string>();
+        const productSymbols = new Set<string>();
+        const products = new Set<Product>()
+        const productFromSymbol = new Map<string, Product>()
+        const productPrice = new Map<string, PriceData>()
+        const prices = new Array<PriceData>();
 
-        this.assetTypes = new Set();
-        this.productSymbols = new Set();
-        this.products = new Set()
-        this.productPrice = new Map<string, PriceData>()
-        this.prices = [];
+        // Retrieve data from blockchain
+        const accountList = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
+        
+        // Popolate producs and prices
+        const priceDataQueue = new Array<PriceData>();
+        const productAccountKeyToProduct = new Map<string, Product>();
 
-        const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
-        for(const account of accounts) {
-            this.handleAccount(account.pubkey, account.account)
-        }
+        accountList.forEach(singleAccount => {
+            const base = parseBaseData(singleAccount.account.data);
+            if(base) {
+                switch (AccountType[base.type]) {
+                    case 'Mapping':
+                        // We can skip these because we're going to get every account owned by this program anyway.
+                        break;
+                    case 'Product':
+                        const productData = parseProductData(singleAccount.account.data)
 
-        for(const queued of this.priceQueue) {
-            this.handlePriceAccount(queued.key, queued.account);
-        }
-        this.priceQueue = [];
+                        productAccountKeyToProduct.set(singleAccount.pubkey.toBase58(), productData.product)
+                        assetTypes.add(productData.product.asset_type);
+                        productSymbols.add(productData.product.symbol);
+                        products.add(productData.product);
+                        productFromSymbol.set(productData.product.symbol, productData.product);
+                        break;
+                    case 'Price':
+                        const priceData = parsePriceData(singleAccount.account.data)     
+                        priceDataQueue.push(priceData)
+                        break;
+                    case 'Test':
+                        break;
+                    default:
+                        throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
+                }    
+            }
+        });
+
+        priceDataQueue.forEach(priceData => {
+            const product = productAccountKeyToProduct.get(priceData.productAccountKey.toBase58())
+            
+            if(product) {
+                productPrice.set(product.symbol, priceData);
+                prices.push(priceData);
+            }
+        });
 
         const result: PythHttpClientResult = {
-            assetsTypes: Array.from(this.assetTypes),
-            productsSymbols: Array.from(this.productSymbols),
-            products: Array.from(this.products),
-            productPrice: this.productPrice,
-            prices: this.prices                   
+            assetTypes: Array.from(assetTypes),
+            symbols: Array.from(productSymbols),
+            products: Array.from(products),
+            productFromSymbol: productFromSymbol,
+            productPrice: productPrice,
+            prices: prices                   
         };
 
         return result;
