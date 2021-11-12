@@ -10,30 +10,34 @@ interface PriceRawData {
 
 /**
  * Reads Pyth price data from a solana web3 connection. This class uses a single HTTP call.
- * Use the method refreshData() to update prices values.
+ * Use the method getData() to get updated prices values.
  */
-export class PythNetworkHTTPClient {
-    private _program_key: PublicKey;
-    private _commitment: Commitment;
-    private _cluster: Cluster;
-    private _price_queue: PriceRawData[];
+export class PythHttpClient {
+    connection: Connection;
+    pythProgramKey: PublicKey;
+    commitment: Commitment;
+
     private productAccountKeyToProduct: Record<string, Product>;
-    private _asset_types: Set<string>;
-    private _product_symbols: Set<string>;
-    private _products: Set<Product>;
-    private _product_price: Map<Product, PriceData>;
+    private priceQueue: PriceRawData[];
+    private assetTypes: Set<string>;
+    private productSymbols: Set<string>;
+    private products: Set<Product>;
+    private productPrice: Map<string, PriceData>;
+    private productPriceArray: PriceData[];
     public priceAccountKeyToProductAccountKey: Record<string, string>;
 
-    constructor(cluster_name: Cluster, commitment: Commitment = 'finalized') {
-        this._program_key = getPythProgramKeyForCluster(cluster_name)        
-        this._commitment = commitment;
-        this._cluster = cluster_name;
-        this._price_queue = [];
+    constructor(connection: Connection, pythProgramKey: PublicKey, commitment: Commitment = 'finalized') {
+        this.connection = connection;
+        this.pythProgramKey = pythProgramKey;
+        this.commitment = commitment;
+
+        this.priceQueue = [];
         this.productAccountKeyToProduct = {};
-        this._asset_types = new Set();
-        this._product_symbols = new Set();
-        this._products = new Set();
-        this._product_price = new Map<Product, PriceData>();
+        this.assetTypes = new Set();
+        this.productSymbols = new Set();
+        this.products = new Set();
+        this.productPrice = new Map<string, PriceData>();
+        this.productPriceArray = [];
         this.priceAccountKeyToProductAccountKey = {}
 
     }
@@ -45,9 +49,9 @@ export class PythNetworkHTTPClient {
             this.priceAccountKeyToProductAccountKey[priceAccountKey.toString()] = key.toString()
         }
 
-        this._asset_types.add(product.asset_type);
-        this._product_symbols.add(product.symbol);
-        this._products.add(product);
+        this.assetTypes.add(product.asset_type);
+        this.productSymbols.add(product.symbol);
+        this.products.add(product);
     }
 
     private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>) {
@@ -59,7 +63,8 @@ export class PythNetworkHTTPClient {
         }
 
         const priceData = parsePriceData(account.data)     
-        this._product_price.set(product, priceData);
+        this.productPrice.set(product.symbol, priceData);
+        this.productPriceArray.push(priceData);
     }    
 
     private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean) {
@@ -77,7 +82,7 @@ export class PythNetworkHTTPClient {
                     if (!productOnly) {
                         this.handlePriceAccount(key, account)
                     } else {
-                        this._price_queue.push({
+                        this.priceQueue.push({
                             key: key,
                             account: account
                         });
@@ -91,59 +96,60 @@ export class PythNetworkHTTPClient {
         }
     }
 
-    public async refreshData() {
-        const require_https = this._cluster === 'mainnet-beta' ? true : false;
-        const current_connection = new Connection(clusterApiUrl(this._cluster, require_https));
+    public async getData(): Promise<PriceData[]> {
+        this.productPriceArray = [];
 
-        const accounts = await current_connection.getProgramAccounts(this._program_key, this._commitment);
+        const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
         for(const account of accounts) {
             this.handleAccount(account.pubkey, account.account, true)
         }
 
-        for(const queued of this._price_queue) {
+        for(const queued of this.priceQueue) {
             this.handleAccount(queued.key, queued.account, false)
         }
+
+        return Array.from(this.productPriceArray);
     }
 
-    public assetsTypesKeys(): string[] {
-        return Array.from(this._asset_types);
+    public assetsTypes(): string[] {
+        return Array.from(this.assetTypes);
     }
 
-    public productsSymbolsKeys(): string[] {
-        return Array.from(this._product_symbols);
+    public productsSymbols(): string[] {
+        return Array.from(this.productSymbols);
     }
 
-    public producsWithAssetType(asset_type: string): Product[] {
-        if(!this._asset_types.has(asset_type))
+    public productsWithAssetType(assetType: string): Product[] {
+        if(!this.assetTypes.has(assetType))
             return [];
         
         const result: Product[] = [];
-        this._products.forEach(current_product => {
-            if(current_product.asset_type === asset_type) {
-                result.push(current_product)
+        this.products.forEach(currentProduct => {
+            if(currentProduct.asset_type === assetType) {
+                result.push(currentProduct)
             }
         });
 
         return result;
     }
 
-    public producsWithSymbol(product_symbol: string): Product[] {
-        if(!this._product_symbols.has(product_symbol)) {
+    public productsWithSymbol(productSymbol: string): Product[] {
+        if(!this.productSymbols.has(productSymbol)) {
             return [];
         }
         
         const result: Product[] = [];
-        this._products.forEach(current_product => {
-            if(current_product.symbol === product_symbol) {
-                result.push(current_product)
+        this.products.forEach(currentProduct => {
+            if(currentProduct.symbol === productSymbol) {
+                result.push(currentProduct)
             }
         });
 
         return result;
     }
 
-    public getProductPrice(product: Product): PriceData | undefined {
-        const result = this._product_price.get(product);
+    public getProductPrice(productSymbol: string): PriceData | undefined {
+        const result = this.productPrice.get(productSymbol);
 
         if(result === null)
             return undefined;
