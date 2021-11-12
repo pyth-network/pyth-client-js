@@ -76,7 +76,7 @@ export class PythHttpClient {
         this.prices.push(priceData);
     }    
 
-    private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean) {
+    private handleAccount(key: PublicKey, account: AccountInfo<Buffer>) {
         const base = parseBaseData(account.data)
         // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
         if (base) {
@@ -88,14 +88,10 @@ export class PythHttpClient {
                     this.handleProductAccount(key, account)
                     break;
                 case 'Price':
-                    if (!productOnly) {
-                        this.handlePriceAccount(key, account)
-                    } else {
-                        this.priceQueue.push({
-                            key: key,
-                            account: account
-                        });
-                    }
+                    this.priceQueue.push({
+                        key: key,
+                        account: account
+                    });
                     break;
                 case 'Test':
                     break;
@@ -121,12 +117,13 @@ export class PythHttpClient {
 
         const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment);
         for(const account of accounts) {
-            this.handleAccount(account.pubkey, account.account, true)
+            this.handleAccount(account.pubkey, account.account)
         }
 
         for(const queued of this.priceQueue) {
-            this.handleAccount(queued.key, queued.account, false)
+            this.handlePriceAccount(queued.key, queued.account);
         }
+        this.priceQueue = [];
 
         const result: PythHttpClientResult = {
             assetsTypes: Array.from(this.assetTypes),
