@@ -1,5 +1,5 @@
-import { AccountInfo, Cluster, clusterApiUrl, Commitment, Connection, PublicKey } from "@solana/web3.js";
-import { Product, PriceData, getPythProgramKeyForCluster, parseProductData, parsePriceData, parseBaseData, AccountType, ProductData } from ".";
+import { AccountInfo, Commitment, Connection, PublicKey } from "@solana/web3.js";
+import { Product, PriceData, parseProductData, parsePriceData, parseBaseData, AccountType } from ".";
 
 const ONES = '1111111111111111111111111111111';
 
