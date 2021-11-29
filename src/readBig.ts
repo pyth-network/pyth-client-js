@@ -28,10 +28,10 @@ function boundsError(value: number, length: number) {
 
 // This function works with react-native >= 0.66.1
 export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
-  return BigInt(buffer.readIntLE(offset, 8))
+  return BigInt(buffer.readIntLE(offset, 6))
 }
 
 // This function works with react-native >= 0.66.1
 export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
-  return BigInt(buffer.readUIntLE(offset, 8))
+  return BigInt(buffer.readUIntLE(offset, 6))
 }
