@@ -30,16 +30,16 @@ function boundsError(value: number, length: number) {
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L129-L145
 export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
-  validateNumber(offset, 'offset')
-  const first = buffer[offset]
-  const last = buffer[offset + 7]
-  if (first === undefined || last === undefined) boundsError(offset, buffer.length - 8)
-  // tslint:disable-next-line:no-bitwise
-  const val = buffer[offset + 4] + buffer[offset + 5] * 2 ** 8 + buffer[offset + 6] * 2 ** 16 + (last * 2 ** 24) // Overflow
-  return (
-    (BigInt(val) * BigInt(2 ** 32)) + // tslint:disable-line:no-bitwise
-    BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24)
-  )
+  const resultUnsigned = readBigUInt64LE(buffer, offset)
+
+  const FFFFFFFFFFFFFFFF = BigInt(2**64 - 1);
+
+  if(buffer.length >= 8) {
+    if(buffer[7] >= 128)
+      return resultUnsigned - FFFFFFFFFFFFFFFF;    
+  }
+
+  return resultUnsigned
 }
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L89-L107
