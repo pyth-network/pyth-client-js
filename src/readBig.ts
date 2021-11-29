@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer'
+
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/errors.js#L758
 const ERR_BUFFER_OUT_OF_BOUNDS = () => new Error('Attempt to access memory outside buffer bounds')
 
@@ -26,33 +28,30 @@ function boundsError(value: number, length: number) {
   throw ERR_OUT_OF_RANGE('offset', `>= 0 and <= ${length}`, value)
 }
 
-// This function works with react-native >= 0.66.1
-export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
-  // Some functions call this one with a buffer longer than 8 bytes
-  buffer = buffer.slice(offset, 8)
-
-  let tot: bigint = BigInt(0)
-  for(let index = 0; index < buffer.length; index++) {
-      const value = buffer[index]
-      const exponent = 8*index
-      const addend = BigInt(value * Math.pow(2, exponent))
-      tot += addend
-      // console.log("index: " + index + ", buffer value: " + value + ", decimal value: " + addend + ", tot: " + tot)
-  }
-
-  return tot
+// https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L129-L145
+export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
+  validateNumber(offset, 'offset')
+  const first = buffer[offset]
+  const last = buffer[offset + 7]
+  if (first === undefined || last === undefined) boundsError(offset, buffer.length - 8)
+  // tslint:disable-next-line:no-bitwise
+  const val = buffer[offset + 4] + buffer[offset + 5] * 2 ** 8 + buffer[offset + 6] * 2 ** 16 + (last * 2 ** 24) // Overflow
+  return (
+    (BigInt(val) * BigInt(2 ** 32)) + // tslint:disable-line:no-bitwise
+    BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24)
+  )
 }
 
-// This function works with react-native >= 0.66.1
-export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
-  const resultUnsigned = readBigUInt64LE(buffer, offset)
+// https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L89-L107
+export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
+  validateNumber(offset, 'offset')
+  const first = buffer[offset]
+  const last = buffer[offset + 7]
+  if (first === undefined || last === undefined) boundsError(offset, buffer.length - 8)
 
-  const FFFFFFFFFFFFFFFF = BigInt(2**64 - 1);
+  const lo = first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24
 
-  if(buffer.length >= 8) {
-    if(buffer[7] >= 128)
-      return resultUnsigned - FFFFFFFFFFFFFFFF;    
-  }
+  const hi = buffer[++offset] + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + last * 2 ** 24
 
-  return resultUnsigned
+  return BigInt(lo) + (BigInt(hi) * BigInt(2 ** 32)) // tslint:disable-line:no-bitwise
 }
