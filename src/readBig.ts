@@ -33,6 +33,9 @@ export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
   let tot: bigint = BigInt(0)
   for(let index = 0; index < buffer.length; index++) {
       const value = buffer[index]
+      if(value === NaN)
+        break
+        
       const exponent = 8*index
 
       const addend = BigInt(value * Math.pow(2, exponent))
