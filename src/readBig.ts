@@ -45,7 +45,7 @@ export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
       
       tot += addend
 
-      //console.log("index: " + index + ", buffer value: " + value + ", decimal value: " + addend + ", tot: " + tot)
+      // console.log("index: " + index + ", buffer value: " + value + ", decimal value: " + addend + ", tot: " + tot)
   }
 
   return BigInt(tot)
