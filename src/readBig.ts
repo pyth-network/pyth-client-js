@@ -30,25 +30,18 @@ function boundsError(value: number, length: number) {
 export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
   buffer = buffer.slice(offset)
 
-  const bufferLenght = Math.min(buffer.length, 8)
-
-  let tot: number = 0
-  const maxIndex = Math.log2(Number.MAX_VALUE)
-  for(let index = 0; index < bufferLenght; index++) {
+  let tot: bigint = BigInt(0)
+  for(let index = 0; index < buffer.length; index++) {
       const value = buffer[index]
       const exponent = 8*index
 
-      if(exponent > maxIndex)
-          throw new Error("out of range")
-
-      const addend = value * Math.pow(2, exponent)
-      
+      const addend = BigInt(value * Math.pow(2, exponent))
       tot += addend
 
       // console.log("index: " + index + ", buffer value: " + value + ", decimal value: " + addend + ", tot: " + tot)
   }
 
-  return BigInt(tot)
+  return tot
 }
 
 // This function works with react-native >= 0.66.1
