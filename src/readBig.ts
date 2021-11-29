@@ -28,19 +28,15 @@ function boundsError(value: number, length: number) {
 
 // This function works with react-native >= 0.66.1
 export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
-  buffer = buffer.slice(offset)
+  // Some functions call this one with a buffer longer than 8 bytes
+  buffer = buffer.slice(offset, 8)
 
   let tot: bigint = BigInt(0)
   for(let index = 0; index < buffer.length; index++) {
       const value = buffer[index]
-      if(value === NaN)
-        break
-        
       const exponent = 8*index
-
       const addend = BigInt(value * Math.pow(2, exponent))
       tot += addend
-
       // console.log("index: " + index + ", buffer value: " + value + ", decimal value: " + addend + ", tot: " + tot)
   }
 
