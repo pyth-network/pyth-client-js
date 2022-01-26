@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.5.2
+
+### Changed
+
+Adds support for `PythNetworkHTTPClient` to use Pyth Network data without a websocket. Uses a single HTTP call over Solana Web3.js connection. 
+
 ### 2.5.1
 
 ### Changed
