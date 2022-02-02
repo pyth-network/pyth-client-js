@@ -15,7 +15,7 @@ test('PythHttpClientCall', done => {
           console.log("product symbols: ", result.symbols);
 
           // Find a product with symbol "SOL/USD"
-          const products = result.products.filter(p => p.symbol === "SOL/USD");
+          const products = result.products.filter(p => p.symbol === "Crypto.SOL/USD");
           expect(products.length).toBeGreaterThan(0);
 
           // Find product prices

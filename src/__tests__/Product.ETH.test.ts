@@ -15,7 +15,7 @@ test('Product', (done) => {
         console.log(product)
         expect(product.magic).toBe(Magic)
         expect(product.version).toBe(Version)
-        expect(product.product.symbol).toBe('ETH/USD')
+        expect(product.product.symbol).toBe('Crypto.ETH/USD')
         done()
       } else {
         done('No product accountInfo')
