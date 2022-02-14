@@ -12,6 +12,7 @@ import {
   ProductData,
   Version,
   AccountType,
+  MAX_SLOT_DIFFERENCE,
 } from './index'
 
 const ONES = '11111111111111111111111111111111'
@@ -33,6 +34,8 @@ export class PythConnection {
 
   productAccountKeyToProduct: Record<string, Product> = {}
   priceAccountKeyToProductAccountKey: Record<string, string> = {}
+  priceAccountKeyPublishedSlot: Record<string, number> = {}
+  newPricesQueue: { key: PublicKey; publishedSlot: number; account: AccountInfo<Buffer> }[] = [] // Used to handle prices going stale
 
   callbacks: PythPriceCallback[] = []
 
@@ -44,7 +47,7 @@ export class PythConnection {
     }
   }
 
-  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>) {
+  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number|null = null) {
     const product = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
     if (product === undefined) {
       // This shouldn't happen since we're subscribed to all of the program's accounts,
@@ -54,7 +57,15 @@ export class PythConnection {
       )
     }
 
-    const priceData = parsePriceData(account.data)
+    const priceData = parsePriceData(account.data, slot)
+
+    if (priceData.status == 1) {
+      const publishedSlot = Number(priceData.aggregate.publishSlot)
+
+      this.priceAccountKeyPublishedSlot[key.toString()] = publishedSlot
+      this.newPricesQueue.push({ key: key, publishedSlot: Number(priceData.aggregate.publishSlot), account: account })
+    }
+
     for (const callback of this.callbacks) {
       callback(product, priceData)
     }
@@ -84,6 +95,26 @@ export class PythConnection {
     }
   }
 
+  private async handleStalePrice() {
+    let slot = await this.connection.getSlot(this.commitment)
+
+    while (this.newPricesQueue.length > 0) {
+      let price = this.newPricesQueue[0]
+
+      if (this.priceAccountKeyPublishedSlot[price.key.toString()] != price.publishedSlot) {
+        this.newPricesQueue.shift()
+        continue
+      }
+
+      if (slot - price.publishedSlot > MAX_SLOT_DIFFERENCE) {
+        this.newPricesQueue.shift()
+        this.handlePriceAccount(price.key, price.account, slot)
+      } else {
+        break
+      }
+    }
+  }
+
   /** Create a PythConnection that reads its data from an underlying solana web3 connection.
    *  pythProgramKey is the public key of the Pyth program running on the chosen solana cluster.
    */
@@ -109,6 +140,8 @@ export class PythConnection {
       },
       this.commitment,
     )
+
+    this.connection.onSlotChange((_) => this.handleStalePrice())
   }
 
   /** Register callback to receive price updates. */

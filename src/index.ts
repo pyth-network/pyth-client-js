@@ -93,7 +93,7 @@ export interface PriceData extends Base {
   drv5: number
   priceComponents: PriceComponent[]
   aggregate: Price
-  // The current price and confidence. The typical use of this interface is to consume these two fields.
+  // The current price and confidence and status. The typical use of this interface is to consume these two fields.
   // If undefined, Pyth does not currently have price information for this product. This condition can
   // happen for various reasons (e.g., US equity market is closed, or insufficient publishers), and your
   // application should handle it gracefully. Note that other raw price information fields (such as
@@ -101,6 +101,7 @@ export interface PriceData extends Base {
   // as their value can be arbitrary when this is undefined.
   price: number | undefined
   confidence: number | undefined
+  status: number
 }
 
 /** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
@@ -223,7 +224,7 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   }
 }
 
-export const parsePriceData = (data: Buffer): PriceData => {
+export const parsePriceData = (data: Buffer, current_slot: number|null = null): PriceData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)
   // program version
@@ -276,9 +277,17 @@ export const parsePriceData = (data: Buffer): PriceData => {
   const drv5 = Number(drv5Component) * 10 ** exponent
   const aggregate = parsePriceInfo(data.slice(208, 240), exponent)
 
+  let status = aggregate.status
+
+  if (current_slot && status === 1) {
+    if(current_slot - Number(aggregate.publishSlot) > MAX_SLOT_DIFFERENCE) {
+      status = 0
+    }
+  }
+
   let price
   let confidence
-  if (aggregate.status === 1) {
+  if (status === 1) {
     price = aggregate.price
     confidence = aggregate.confidence
   }
@@ -333,6 +342,7 @@ export const parsePriceData = (data: Buffer): PriceData => {
     priceComponents,
     price,
     confidence,
+    status,
   }
 }
 
