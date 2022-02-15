@@ -43,7 +43,7 @@ export class PythHttpClient {
     // Popolate producs and prices
     const priceDataQueue = new Array<PriceData>();
     const productAccountKeyToProduct = new Map<string, Product>();
-    const current_slot = await this.connection.getSlot(this.commitment);
+    const currentSlot = await this.connection.getSlot(this.commitment);
 
     accountList.forEach(singleAccount => {
       const base = parseBaseData(singleAccount.account.data);
@@ -62,7 +62,7 @@ export class PythHttpClient {
             productFromSymbol.set(productData.product.symbol, productData.product);
             break;
           case 'Price':
-            const priceData = parsePriceData(singleAccount.account.data, current_slot)
+            const priceData = parsePriceData(singleAccount.account.data, currentSlot)
             priceDataQueue.push(priceData)
             break;
           case 'Test':

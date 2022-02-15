@@ -224,7 +224,7 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   }
 }
 
-export const parsePriceData = (data: Buffer, current_slot: number|null = null): PriceData => {
+export const parsePriceData = (data: Buffer, currentSlot: number|null = null): PriceData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)
   // program version
@@ -279,8 +279,8 @@ export const parsePriceData = (data: Buffer, current_slot: number|null = null): 
 
   let status = aggregate.status
 
-  if (current_slot && status === 1) {
-    if(current_slot - Number(aggregate.publishSlot) > MAX_SLOT_DIFFERENCE) {
+  if (currentSlot && status === 1) {
+    if(currentSlot - Number(aggregate.publishSlot) > MAX_SLOT_DIFFERENCE) {
       status = 0
     }
   }

@@ -59,11 +59,11 @@ export class PythConnection {
 
     const priceData = parsePriceData(account.data, slot)
 
-    if (priceData.status == 1) {
+    if (priceData.status === 1) {
       const publishedSlot = Number(priceData.aggregate.publishSlot)
 
       this.priceAccountKeyPublishedSlot[key.toString()] = publishedSlot
-      this.newPricesQueue.push({ key: key, publishedSlot: Number(priceData.aggregate.publishSlot), account: account })
+      this.newPricesQueue.push({ key, publishedSlot: Number(priceData.aggregate.publishSlot), account })
     }
 
     for (const callback of this.callbacks) {
@@ -96,12 +96,12 @@ export class PythConnection {
   }
 
   private async handleStalePrice() {
-    let slot = await this.connection.getSlot(this.commitment)
+    const slot = await this.connection.getSlot(this.commitment)
 
     while (this.newPricesQueue.length > 0) {
-      let price = this.newPricesQueue[0]
+      const price = this.newPricesQueue[0]
 
-      if (this.priceAccountKeyPublishedSlot[price.key.toString()] != price.publishedSlot) {
+      if (this.priceAccountKeyPublishedSlot[price.key.toString()] !== price.publishedSlot) {
         this.newPricesQueue.shift()
         continue
       }
