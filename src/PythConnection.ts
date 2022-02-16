@@ -13,6 +13,7 @@ import {
   Version,
   AccountType,
   MAX_SLOT_DIFFERENCE,
+  PriceStatus,
 } from './index'
 
 const ONES = '11111111111111111111111111111111'
@@ -59,7 +60,7 @@ export class PythConnection {
 
     const priceData = parsePriceData(account.data, slot)
 
-    if (priceData.status === 1) {
+    if (priceData.status === PriceStatus.Trading) {
       const publishedSlot = Number(priceData.aggregate.publishSlot)
 
       this.priceAccountKeyPublishedSlot[key.toString()] = publishedSlot
