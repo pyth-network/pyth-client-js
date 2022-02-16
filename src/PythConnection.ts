@@ -75,19 +75,19 @@ export class PythConnection {
     const base = parseBaseData(account.data)
     // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
     if (base) {
-      switch (AccountType[base.type]) {
-        case 'Mapping':
+      switch (base.type) {
+        case AccountType.Mapping:
           // We can skip these because we're going to get every account owned by this program anyway.
           break
-        case 'Product':
+        case AccountType.Product:
           this.handleProductAccount(key, account)
           break
-        case 'Price':
+        case AccountType.Price:
           if (!productOnly) {
             this.handlePriceAccount(key, account)
           }
           break
-        case 'Test':
+        case AccountType.Test:
           break
         default:
           throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)

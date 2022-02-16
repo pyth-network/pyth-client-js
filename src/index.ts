@@ -7,14 +7,38 @@ import { readBigInt64LE, readBigUInt64LE } from './readBig'
 export const Magic = 0xa1b2c3d4
 export const Version2 = 2
 export const Version = Version2
-export const PriceStatus = ['Unknown', 'Trading', 'Halted', 'Auction']
-export const CorpAction = ['NoCorpAct']
-export const PriceType = ['Unknown', 'Price']
-export const DeriveType = ['Unknown', 'TWAP', 'Volatility']
-export const AccountType = ['Unknown', 'Mapping', 'Product', 'Price', 'Test']
-
 /** Number of slots that can pass before a publisher's price is no longer included in the aggregate. */
 export const MAX_SLOT_DIFFERENCE = 25
+
+export enum PriceStatus {
+  Unknown,
+  Trading,
+  Halted,
+  Auction
+}
+
+export enum CorpAction {
+  NoCorpAct
+}
+
+export enum PriceType {
+  Unknown,
+  Price
+}
+
+export enum DeriveType {
+  Unknown,
+  TWAP,
+  Volatility
+}
+
+export enum AccountType {
+  Unknown,
+  Mapping,
+  Product,
+  Price,
+  Test
+}
 
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
@@ -22,7 +46,7 @@ const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new Publ
 export interface Base {
   magic: number
   version: number
-  type: number
+  type: AccountType
   size: number
 }
 
@@ -49,8 +73,8 @@ export interface Price {
   price: number
   confidenceComponent: bigint
   confidence: number
-  status: number
-  corporateAction: number
+  status: PriceStatus
+  corporateAction: CorpAction
   publishSlot: bigint
 }
 
@@ -68,7 +92,7 @@ export interface Ema {
 }
 
 export interface PriceData extends Base {
-  priceType: number
+  priceType: PriceType
   exponent: number
   numComponentPrices: number
   numQuoters: number
@@ -93,7 +117,7 @@ export interface PriceData extends Base {
   drv5: number
   priceComponents: PriceComponent[]
   aggregate: Price
-  // The current price and confidence and status. The typical use of this interface is to consume these two fields.
+  // The current price and confidence and status. The typical use of this interface is to consume these three fields.
   // If undefined, Pyth does not currently have price information for this product. This condition can
   // happen for various reasons (e.g., US equity market is closed, or insufficient publishers), and your
   // application should handle it gracefully. Note that other raw price information fields (such as
@@ -101,7 +125,7 @@ export interface PriceData extends Base {
   // as their value can be arbitrary when this is undefined.
   price: number | undefined
   confidence: number | undefined
-  status: number
+  status: PriceStatus
 }
 
 /** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
@@ -116,7 +140,7 @@ export function parseBaseData(data: Buffer): Base | undefined {
     // program version
     const version = data.readUInt32LE(4)
     // account type
-    const type = data.readUInt32LE(8)
+    const type: AccountType = data.readUInt32LE(8)
     // account used size
     const size = data.readUInt32LE(12)
     return { magic, version, type, size }
@@ -208,9 +232,9 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   const confidenceComponent = readBigUInt64LE(data, 8)
   const confidence = Number(confidenceComponent) * 10 ** exponent
   // aggregate status
-  const status = data.readUInt32LE(16)
+  const status: PriceStatus = data.readUInt32LE(16)
   // aggregate corporate action
-  const corporateAction = data.readUInt32LE(20)
+  const corporateAction: CorpAction = data.readUInt32LE(20)
   // aggregate publish slot
   const publishSlot = readBigUInt64LE(data, 24)
   return {
@@ -234,7 +258,7 @@ export const parsePriceData = (data: Buffer, currentSlot: number|null = null): P
   // price account size
   const size = data.readUInt32LE(12)
   // price or calculation type
-  const priceType = data.readUInt32LE(16)
+  const priceType: PriceType = data.readUInt32LE(16)
   // price exponent
   const exponent = data.readInt32LE(20)
   // number of component prices
@@ -279,15 +303,15 @@ export const parsePriceData = (data: Buffer, currentSlot: number|null = null): P
 
   let status = aggregate.status
 
-  if (currentSlot && status === 1) {
+  if (currentSlot && status === PriceStatus.Trading) {
     if(currentSlot - Number(aggregate.publishSlot) > MAX_SLOT_DIFFERENCE) {
-      status = 0
+      status = PriceStatus.Unknown
     }
   }
 
   let price
   let confidence
-  if (status === 1) {
+  if (status === PriceStatus.Trading) {
     price = aggregate.price
     confidence = aggregate.confidence
   }
