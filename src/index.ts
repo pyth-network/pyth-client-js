@@ -248,6 +248,8 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   }
 }
 
+// Provide currentSlot when available to allow status to consider the case when price goes stale. It is optional because 
+// it requires an extra request to get it when it is not available which is not always efficient.
 export const parsePriceData = (data: Buffer, currentSlot: number|null = null): PriceData => {
   // pyth magic number
   const magic = data.readUInt32LE(0)

@@ -31,7 +31,7 @@ const pythConnection = new PythConnection(solanaWeb3Connection, getPythProgramKe
 pythConnection.onPriceChange((product, price) => {
   // sample output:
   // SRM/USD: $8.68725 ±$0.0131
-  console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
+  console.log(`${product.symbol} : $${price.price} \xB1$${price.confidence} Status: ${PriceStatus[price.status]}`)
 })
 
 // Start listening for price change events.

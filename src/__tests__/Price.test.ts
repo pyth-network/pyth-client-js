@@ -42,8 +42,6 @@ test('Price', (done) => {
 
 test('Handle price getting stale', (done) => {
   jest.setTimeout(60000)
-  const url = clusterApiUrl('devnet')
-  const ethPriceKey = 'EdVCmQ9FSPcVe5YySXDPCRmc8aDQLKJ9xvYBMZPie1Vw'
 
   const b64_data = 
       '1MOyoQIAAAADAAAAEAsAAAEAAAD4////GwAAABUAAAC6yDcHAAAAALnINwcAAAAA4Gbo+kgAAAB/BW14AQAAAHyfF3gAAAAAEF8QBg' +

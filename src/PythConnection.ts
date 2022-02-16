@@ -47,7 +47,7 @@ export class PythConnection {
     }
   }
 
-  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number|null = null) {
+  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number) {
     const product = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
     if (product === undefined) {
       // This shouldn't happen since we're subscribed to all of the program's accounts,
@@ -71,7 +71,7 @@ export class PythConnection {
     }
   }
 
-  private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean) {
+  private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean, slot: number) {
     const base = parseBaseData(account.data)
     // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
     if (base) {
@@ -84,7 +84,7 @@ export class PythConnection {
           break
         case AccountType.Price:
           if (!productOnly) {
-            this.handlePriceAccount(key, account)
+            this.handlePriceAccount(key, account, slot)
           }
           break
         case AccountType.Test:
@@ -129,14 +129,15 @@ export class PythConnection {
    */
   public async start() {
     const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
+    const currentSlot = await this.connection.getSlot(this.commitment)
     for (const account of accounts) {
-      this.handleAccount(account.pubkey, account.account, true)
+      this.handleAccount(account.pubkey, account.account, true, currentSlot)
     }
 
     this.connection.onProgramAccountChange(
       this.pythProgramKey,
       (keyedAccountInfo, context) => {
-        this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false)
+        this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false, context.slot)
       },
       this.commitment,
     )
