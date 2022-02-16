@@ -20,9 +20,9 @@ test('Product', (done) => {
       
       if (price.status == 1) { // Trading
         console.log("It is in trading status. Testing getting stale")
-        expect(parsePriceData(accountInfo.data, Number(price.aggregate.publishSlot) + MAX_SLOT_DIFFERENCE).status).toBe(1)
+        expect(parsePriceData(accountInfo.data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE).status).toBe(1)
 
-        const stalePrice = parsePriceData(accountInfo.data, Number(price.aggregate.publishSlot) + MAX_SLOT_DIFFERENCE + 1)
+        const stalePrice = parsePriceData(accountInfo.data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE + 1)
         expect(stalePrice.status).toBe(0)  
         expect(stalePrice.price).toBeUndefined()
         expect(stalePrice.confidence).toBeUndefined()

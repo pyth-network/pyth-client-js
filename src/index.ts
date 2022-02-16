@@ -75,7 +75,7 @@ export interface Price {
   confidence: number
   status: PriceStatus
   corporateAction: CorpAction
-  publishSlot: bigint
+  publishSlot: number
 }
 
 export interface PriceComponent {
@@ -235,8 +235,8 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   const status: PriceStatus = data.readUInt32LE(16)
   // aggregate corporate action
   const corporateAction: CorpAction = data.readUInt32LE(20)
-  // aggregate publish slot
-  const publishSlot = readBigUInt64LE(data, 24)
+  // aggregate publish slot. It is converted to number to be consistent with Solana's library interface (Slot there is number)
+  const publishSlot = Number(readBigUInt64LE(data, 24))
   return {
     priceComponent,
     price,
@@ -304,7 +304,7 @@ export const parsePriceData = (data: Buffer, currentSlot: number|null = null): P
   let status = aggregate.status
 
   if (currentSlot && status === PriceStatus.Trading) {
-    if(currentSlot - Number(aggregate.publishSlot) > MAX_SLOT_DIFFERENCE) {
+    if(currentSlot - aggregate.publishSlot > MAX_SLOT_DIFFERENCE) {
       status = PriceStatus.Unknown
     }
   }
