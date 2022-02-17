@@ -14,22 +14,22 @@ export enum PriceStatus {
   Unknown,
   Trading,
   Halted,
-  Auction
+  Auction,
 }
 
 export enum CorpAction {
-  NoCorpAct
+  NoCorpAct,
 }
 
 export enum PriceType {
   Unknown,
-  Price
+  Price,
 }
 
 export enum DeriveType {
   Unknown,
   TWAP,
-  Volatility
+  Volatility,
 }
 
 export enum AccountType {
@@ -37,7 +37,7 @@ export enum AccountType {
   Mapping,
   Product,
   Price,
-  Test
+  Test,
 }
 
 const empty32Buffer = Buffer.alloc(32)
@@ -248,7 +248,7 @@ const parsePriceInfo = (data: Buffer, exponent: number): Price => {
   }
 }
 
-// Provide currentSlot when available to allow status to consider the case when price goes stale. It is optional because 
+// Provide currentSlot when available to allow status to consider the case when price goes stale. It is optional because
 // it requires an extra request to get it when it is not available which is not always efficient.
 export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData => {
   // pyth magic number
@@ -306,7 +306,7 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   let status = aggregate.status
 
   if (currentSlot && status === PriceStatus.Trading) {
-    if(currentSlot - aggregate.publishSlot > MAX_SLOT_DIFFERENCE) {
+    if (currentSlot - aggregate.publishSlot > MAX_SLOT_DIFFERENCE) {
       status = PriceStatus.Unknown
     }
   }
@@ -372,6 +372,6 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   }
 }
 
-export { PythConnection } from './PythConnection';
-export { PythHttpClient } from './PythHttpClient';
-export { getPythProgramKeyForCluster } from './cluster';
+export { PythConnection } from './PythConnection'
+export { PythHttpClient } from './PythHttpClient'
+export { getPythProgramKeyForCluster } from './cluster'
