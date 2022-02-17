@@ -35,8 +35,6 @@ export class PythConnection {
 
   productAccountKeyToProduct: Record<string, Product> = {}
   priceAccountKeyToProductAccountKey: Record<string, string> = {}
-  priceAccountKeyPublishedSlot: Record<string, number> = {}
-  newPricesQueue: { key: PublicKey; publishedSlot: number; account: AccountInfo<Buffer> }[] = [] // Used to handle prices going stale
 
   callbacks: PythPriceCallback[] = []
 
@@ -59,13 +57,6 @@ export class PythConnection {
     }
 
     const priceData = parsePriceData(account.data, slot)
-
-    if (priceData.status === PriceStatus.Trading) {
-      const publishedSlot = Number(priceData.aggregate.publishSlot)
-
-      this.priceAccountKeyPublishedSlot[key.toString()] = publishedSlot
-      this.newPricesQueue.push({ key, publishedSlot: Number(priceData.aggregate.publishSlot), account })
-    }
 
     for (const callback of this.callbacks) {
       callback(product, priceData)
@@ -96,26 +87,6 @@ export class PythConnection {
     }
   }
 
-  private async handleStalePrice() {
-    const slot = await this.connection.getSlot(this.commitment)
-
-    while (this.newPricesQueue.length > 0) {
-      const price = this.newPricesQueue[0]
-
-      if (this.priceAccountKeyPublishedSlot[price.key.toString()] !== price.publishedSlot) {
-        this.newPricesQueue.shift()
-        continue
-      }
-
-      if (slot - price.publishedSlot > MAX_SLOT_DIFFERENCE) {
-        this.newPricesQueue.shift()
-        this.handlePriceAccount(price.key, price.account, slot)
-      } else {
-        break
-      }
-    }
-  }
-
   /** Create a PythConnection that reads its data from an underlying solana web3 connection.
    *  pythProgramKey is the public key of the Pyth program running on the chosen solana cluster.
    */
@@ -142,8 +113,6 @@ export class PythConnection {
       },
       this.commitment,
     )
-
-    this.connection.onSlotChange((_) => this.handleStalePrice())
   }
 
   /** Register callback to receive price updates. */
