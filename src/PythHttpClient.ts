@@ -43,15 +43,16 @@ export class PythHttpClient {
     // Popolate producs and prices
     const priceDataQueue = new Array<PriceData>();
     const productAccountKeyToProduct = new Map<string, Product>();
+    const currentSlot = await this.connection.getSlot(this.commitment);
 
     accountList.forEach(singleAccount => {
       const base = parseBaseData(singleAccount.account.data);
       if (base) {
-        switch (AccountType[base.type]) {
-          case 'Mapping':
+        switch (base.type) {
+          case AccountType.Mapping:
             // We can skip these because we're going to get every account owned by this program anyway.
             break;
-          case 'Product':
+          case AccountType.Product:
             const productData = parseProductData(singleAccount.account.data)
 
             productAccountKeyToProduct.set(singleAccount.pubkey.toBase58(), productData.product)
@@ -60,11 +61,11 @@ export class PythHttpClient {
             products.add(productData.product);
             productFromSymbol.set(productData.product.symbol, productData.product);
             break;
-          case 'Price':
-            const priceData = parsePriceData(singleAccount.account.data)
+          case AccountType.Price:
+            const priceData = parsePriceData(singleAccount.account.data, currentSlot)
             priceDataQueue.push(priceData)
             break;
-          case 'Test':
+          case AccountType.Test:
             break;
           default:
             throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)

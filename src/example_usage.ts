@@ -1,6 +1,7 @@
 import { Cluster, clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
 import { PythConnection } from './PythConnection'
 import { getPythProgramKeyForCluster } from './cluster'
+import { PriceStatus } from '.'
 
 const SOLANA_CLUSTER_NAME: Cluster = 'devnet'
 const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER_NAME))
@@ -15,7 +16,7 @@ pythConnection.onPriceChange((product, price) => {
     console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
   } else {
     // tslint:disable-next-line:no-console
-    console.log(`${product.symbol}: price currently unavailable`)
+    console.log(`${product.symbol}: price currently unavailable. status is ${PriceStatus[price.status]}`)
   }
 })
 

@@ -12,6 +12,8 @@ import {
   ProductData,
   Version,
   AccountType,
+  MAX_SLOT_DIFFERENCE,
+  PriceStatus,
 } from './index'
 
 const ONES = '11111111111111111111111111111111'
@@ -44,7 +46,7 @@ export class PythConnection {
     }
   }
 
-  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>) {
+  private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number) {
     const product = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
     if (product === undefined) {
       // This shouldn't happen since we're subscribed to all of the program's accounts,
@@ -54,29 +56,30 @@ export class PythConnection {
       )
     }
 
-    const priceData = parsePriceData(account.data)
+    const priceData = parsePriceData(account.data, slot)
+
     for (const callback of this.callbacks) {
       callback(product, priceData)
     }
   }
 
-  private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean) {
+  private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean, slot: number) {
     const base = parseBaseData(account.data)
     // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
     if (base) {
-      switch (AccountType[base.type]) {
-        case 'Mapping':
+      switch (base.type) {
+        case AccountType.Mapping:
           // We can skip these because we're going to get every account owned by this program anyway.
           break
-        case 'Product':
+        case AccountType.Product:
           this.handleProductAccount(key, account)
           break
-        case 'Price':
+        case AccountType.Price:
           if (!productOnly) {
-            this.handlePriceAccount(key, account)
+            this.handlePriceAccount(key, account, slot)
           }
           break
-        case 'Test':
+        case AccountType.Test:
           break
         default:
           throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
@@ -98,14 +101,15 @@ export class PythConnection {
    */
   public async start() {
     const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
+    const currentSlot = await this.connection.getSlot(this.commitment)
     for (const account of accounts) {
-      this.handleAccount(account.pubkey, account.account, true)
+      this.handleAccount(account.pubkey, account.account, true, currentSlot)
     }
 
     this.connection.onProgramAccountChange(
       this.pythProgramKey,
       (keyedAccountInfo, context) => {
-        this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false)
+        this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false, context.slot)
       },
       this.commitment,
     )
