@@ -96,10 +96,10 @@ test('Handle price getting stale', (done) => {
   expect(price.version).toBe(Version)
   expect(price.status).toBe(PriceStatus.Trading);
 
-  expect(parsePriceData(data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE).status).toBe(1)
+  expect(parsePriceData(data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE).status).toBe(PriceStatus.Trading)
 
   const stalePrice = parsePriceData(data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE + 1)
-  expect(stalePrice.status).toBe(0)
+  expect(stalePrice.status).toBe(PriceStatus.Unknown)
   expect(stalePrice.price).toBeUndefined()
   expect(stalePrice.confidence).toBeUndefined()
 
