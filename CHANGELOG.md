@@ -1,18 +1,33 @@
 # Changelog
 
-### 2.5.1
+## 2.6.0
+
+### Added
+- Checks current slot when parsing a Price account and set status to unknown if price is stale. Being stale means it is not updated in `MAX_SLOT_DIFFERENCE` slots (currently 25).
+- Adds status field in PriceData to access the current status (considering price getting stale) easier.
+
+### Changed
+- Converts Some type/status structs to enums to be able to use them in a cleaner way. It's backward compatible.
+
+
+## 2.5.3
+
+### Fixed
+Updated tests for Pyth symbology change
+
+## 2.5.1
 
 ### Changed
 
 Improved error message when passing an invalid cluster name to `pythProgramKeyForCluster`
 
-### 2.5.0
+## 2.5.0
 
 ### Changed
 
 Restructure `drv2` field in `PriceData` to `minPublishers` and other future drv values
 
-### 2.4.0
+## 2.4.0
 
 ### Changed
 
@@ -22,7 +37,7 @@ Product only define `price` and `confidence` fields if it currently has a valid 
 
 Memory leak in an underlying library
 
-### 2.3.2
+## 2.3.2
 
 ### Added
 
