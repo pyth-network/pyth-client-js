@@ -28,7 +28,6 @@ export enum PriceType {
 
 export enum DeriveType {
   Unknown,
-  EMAP,
   Volatility,
 }
 
