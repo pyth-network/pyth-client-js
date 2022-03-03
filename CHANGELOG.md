@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.6.1
+
+### Changed
+- Changed TWAP to EMAP and TWAC to EMAC
+
 ## 2.6.0
 
 ### Added
