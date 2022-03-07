@@ -28,7 +28,6 @@ export enum PriceType {
 
 export enum DeriveType {
   Unknown,
-  TWAP,
   Volatility,
 }
 
@@ -98,8 +97,8 @@ export interface PriceData extends Base {
   numQuoters: number
   lastSlot: bigint
   validSlot: bigint
-  twap: Ema
-  twac: Ema
+  emaPrice: Ema
+  emaConfidence: Ema
   drv1Component: bigint
   drv1: number
   minPublishers: number
@@ -271,10 +270,10 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   const lastSlot = readBigUInt64LE(data, 32)
   // valid on-chain slot of aggregate price
   const validSlot = readBigUInt64LE(data, 40)
-  // time-weighted average price
-  const twap = parseEma(data.slice(48, 72), exponent)
-  // time-weighted average confidence interval
-  const twac = parseEma(data.slice(72, 96), exponent)
+  // exponential moving average price
+  const emaPrice = parseEma(data.slice(48, 72), exponent)
+  // exponential moving average confidence interval
+  const emaConfidence = parseEma(data.slice(72, 96), exponent)
   // space for future derived values
   const drv1Component = readBigInt64LE(data, 96)
   const drv1 = Number(drv1Component) * 10 ** exponent
@@ -347,8 +346,8 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     numQuoters,
     lastSlot,
     validSlot,
-    twap,
-    twac,
+    emaPrice,
+    emaConfidence,
     drv1Component,
     drv1,
     minPublishers,
