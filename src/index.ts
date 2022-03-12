@@ -54,11 +54,13 @@ export interface MappingData extends Base {
   productAccountKeys: PublicKey[]
 }
 
-export interface Product {
+export type Product = {
   symbol: string
   asset_type: string
   quote_currency: string
   tenor: string
+  price_account: PublicKey
+} & {
   [index: string]: string
 }
 
@@ -195,6 +197,7 @@ export const parseProductData = (data: Buffer): ProductData => {
   const priceAccountBytes = data.slice(16, 48)
   const priceAccountKey = new PublicKey(priceAccountBytes)
   const product = {} as Product
+  product.price_account = priceAccountKey
   let idx = 48
   while (idx < size) {
     const keyLength = data[idx]
