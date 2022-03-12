@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer'
+import BigInt from 'big-integer'
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/errors.js#L758
 const ERR_BUFFER_OUT_OF_BOUNDS = () => new Error('Attempt to access memory outside buffer bounds')
@@ -36,10 +37,8 @@ export function readBigInt64LE(buffer: Buffer, offset = 0): bigint {
   if (first === undefined || last === undefined) boundsError(offset, buffer.length - 8)
   // tslint:disable-next-line:no-bitwise
   const val = buffer[offset + 4] + buffer[offset + 5] * 2 ** 8 + buffer[offset + 6] * 2 ** 16 + (last << 24) // Overflow
-  return (
-    (BigInt(val) << BigInt(32)) + // tslint:disable-line:no-bitwise
-    BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24)
-  )
+  const result = BigInt(val).shiftLeft(32).add(BigInt(first + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + buffer[++offset] * 2 ** 24))
+  return result;
 }
 
 // https://github.com/nodejs/node/blob/v14.17.0/lib/internal/buffer.js#L89-L107
@@ -53,5 +52,5 @@ export function readBigUInt64LE(buffer: Buffer, offset = 0): bigint {
 
   const hi = buffer[++offset] + buffer[++offset] * 2 ** 8 + buffer[++offset] * 2 ** 16 + last * 2 ** 24
 
-  return BigInt(lo) + (BigInt(hi) << BigInt(32)) // tslint:disable-line:no-bitwise
+  return BigInt(hi).shiftLeft(32).add(lo) // tslint:disable-line:no-bitwise
 }
