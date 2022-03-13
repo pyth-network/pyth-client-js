@@ -1,5 +1,5 @@
 import { Commitment, Connection, PublicKey } from '@solana/web3.js'
-import { Product, PriceData, parseProductData, parsePriceData, parseBaseData, AccountType } from '.'
+import { Product, ProductData, PriceData, parseProductData, parsePriceData, parseBaseData, AccountType } from '.'
 
 export interface PythHttpClientResult {
   assetTypes: string[]
@@ -8,6 +8,12 @@ export interface PythHttpClientResult {
   productFromSymbol: Map<string, Product>
   productPrice: Map<string, PriceData>
   prices: PriceData[]
+  productAndPriceAccountKeys: ProductAndPriceAccount[]
+}
+
+export interface ProductAndPriceAccount {
+  productAccount: PublicKey
+  priceAccount: PublicKey
 }
 
 /**
@@ -36,13 +42,14 @@ export class PythHttpClient {
     const productFromSymbol = new Map<string, Product>()
     const productPrice = new Map<string, PriceData>()
     const prices = new Array<PriceData>()
+    const productAndPriceAccountKeys = new Array<ProductAndPriceAccount>()
 
     // Retrieve data from blockchain
     const accountList = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
 
     // Popolate producs and prices
     const priceDataQueue = new Array<PriceData>()
-    const productAccountKeyToProduct = new Map<string, Product>()
+    const productAccountKeyToProductData = new Map<string, ProductData>()
     const currentSlot = await this.connection.getSlot(this.commitment)
 
     accountList.forEach((singleAccount) => {
@@ -55,7 +62,7 @@ export class PythHttpClient {
           case AccountType.Product:
             const productData = parseProductData(singleAccount.account.data)
 
-            productAccountKeyToProduct.set(singleAccount.pubkey.toBase58(), productData.product)
+            productAccountKeyToProductData.set(singleAccount.pubkey.toBase58(), productData)
             assetTypes.add(productData.product.asset_type)
             productSymbols.add(productData.product.symbol)
             products.add(productData.product)
@@ -74,11 +81,15 @@ export class PythHttpClient {
     })
 
     priceDataQueue.forEach((priceData) => {
-      const product = productAccountKeyToProduct.get(priceData.productAccountKey.toBase58())
+      const productData = productAccountKeyToProductData.get(priceData.productAccountKey.toBase58())
 
-      if (product) {
-        productPrice.set(product.symbol, priceData)
+      if (productData) {
+        productPrice.set(productData.product.symbol, priceData)
         prices.push(priceData)
+        productAndPriceAccountKeys.push({
+          productAccount: priceData.productAccountKey,
+          priceAccount: productData.priceAccountKey,
+        })
       }
     })
 
@@ -89,6 +100,7 @@ export class PythHttpClient {
       productFromSymbol,
       productPrice,
       prices,
+      productAndPriceAccountKeys,
     }
 
     return result
