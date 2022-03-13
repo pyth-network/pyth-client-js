@@ -22,7 +22,7 @@ const ONES = '11111111111111111111111111111111'
  * Type of callback invoked whenever a pyth price account changes. The callback additionally
  * gets access product, which contains the metadata for this price account (e.g., that the symbol is "BTC/USD")
  */
-export type PythPriceCallback = (product: Product, price: PriceData) => void
+export type PythPriceCallback = (product: Product, price: PriceData, priceAccountKey: PublicKey) => void
 
 /**
  * Reads Pyth price data from a solana web3 connection. This class uses a callback-driven model,
@@ -59,7 +59,7 @@ export class PythConnection {
     const priceData = parsePriceData(account.data, slot)
 
     for (const callback of this.callbacks) {
-      callback(product, priceData)
+      callback(product, priceData, key)
     }
   }
 
