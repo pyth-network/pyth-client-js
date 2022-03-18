@@ -59,6 +59,7 @@ export interface Product {
   asset_type: string
   quote_currency: string
   tenor: string
+  price_account: string
   [index: string]: string
 }
 
@@ -195,6 +196,7 @@ export const parseProductData = (data: Buffer): ProductData => {
   const priceAccountBytes = data.slice(16, 48)
   const priceAccountKey = new PublicKey(priceAccountBytes)
   const product = {} as Product
+  product.price_account = priceAccountKey.toBase58()
   let idx = 48
   while (idx < size) {
     const keyLength = data[idx]
