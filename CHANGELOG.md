@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.3
+
+### Changed
+- Renamed websocket usage example to `example_ws_usage.ts`
+- Updated documentation to describe usage for `PythHttpClient`
+
+### Added
+- Example code for using the http client in `example_http_usage.ts`
+
 ## 2.6.1
 
 ### Changed

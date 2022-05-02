@@ -22,13 +22,17 @@ $ yarn add @pythnetwork/client
 
 ## Example Usage
 
-This library provides a subscription model for consuming price updates:
+This library lets you consume prices in two different ways: you can either get continuously-streaming price updates via a websocket connection, or send one-off requests every time you want the current price.  
 
-```javascript
+### Streaming updates
+
+The websocket connection provides a subscription model for consuming price updates:
+
+```typescript
 const pythConnection = new PythConnection(solanaWeb3Connection, getPythProgramKeyForCluster(solanaClusterName))
 pythConnection.onPriceChange((product, price) => {
   // sample output:
-  // SRM/USD: $8.68725 ±$0.0131
+  // Crypto.SRM/USD: $8.68725 ±$0.0131 Status: Trading
   console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence} Status: ${PriceStatus[price.status]}`)
 })
 
@@ -41,11 +45,32 @@ This callback gets two arguments:
 * `price` contains the official Pyth price and confidence, along with the component prices that were combined to produce this result.
 * `product` contains metadata about the price feed, such as the symbol (e.g., "BTC/USD") and the number of decimal points.
 
-See `src/example_usage.ts` for a runnable example of the above usage.
-You can run this example with `npm run example`.
+See `src/example_ws_usage.ts` for a runnable example of the above usage.
+You can run this example with `npm run ws_example`.
 
 You may also register to specific account updates using `connection.onAccountChange` in the solana web3 API, then
 use the methods in `index.ts` to parse the on-chain data structures into Javascript-friendly objects.
+
+### Request an update
+
+The request model allows you to send one-off HTTP requests to get the current price without subscribing to ongoing updates:
+
+```typescript
+const pythClient = new PythHttpClient(connection, pythPublicKey);
+const data = await pythClient.getData();
+
+for (let symbol of data.symbols) {
+  const price = data.productPrice.get(symbol)!;
+  // Sample output:
+  // Crypto.SRM/USD: $8.68725 ±$0.0131 Status: Trading
+  console.log(`${symbol}: $${price.price} \xB1$${price.confidence} Status: ${PriceStatus[price.status]}`)
+}
+```
+
+The `getData` function will fetch all information about every product listed on Pyth.
+This includes the current price as well as metadata, such as the base and quote currencies.
+See `src/example_http_usage.ts` for a runnable example of the above usage.
+You can run this example with `npm run http_example`.
 
 ## Releases
 
