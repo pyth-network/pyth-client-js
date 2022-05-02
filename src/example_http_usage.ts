@@ -10,7 +10,7 @@ async function runQuery(): Promise<void> {
   const pythClient = new PythHttpClient(connection, pythPublicKey);
   const data = await pythClient.getData();
 
-  for (let symbol of data.symbols) {
+  for (const symbol of data.symbols) {
     const price = data.productPrice.get(symbol)!;
 
     if (price.price && price.confidence) {
