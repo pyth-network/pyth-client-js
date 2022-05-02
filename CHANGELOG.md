@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.6.2
+## 2.6.3
 
 ### Changed
 - Renamed websocket usage example to `example_ws_usage.ts`
