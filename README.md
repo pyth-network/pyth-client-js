@@ -6,8 +6,6 @@
 
 This library reads on-chain Pyth data from [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js) and returns JavaScript-friendly objects.
 
-See our [examples repo](https://github.com/pyth-network/pyth-examples) for real-world usage examples.
-
 ## Installation
 
 ### npm
