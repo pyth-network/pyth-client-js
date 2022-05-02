@@ -3,9 +3,12 @@ import { Product, PriceData, parseProductData, parsePriceData, parseBaseData, Ac
 
 export interface PythHttpClientResult {
   assetTypes: string[]
+  /** The name of each product, e.g., "Crypto.BTC/USD" */
   symbols: string[]
   products: Product[]
+  /** Metadata for each product. */
   productFromSymbol: Map<string, Product>
+  /** The current price of each product. */
   productPrice: Map<string, PriceData>
   prices: PriceData[]
 }
@@ -40,7 +43,7 @@ export class PythHttpClient {
     // Retrieve data from blockchain
     const accountList = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
 
-    // Popolate producs and prices
+    // Populate products and prices
     const priceDataQueue = new Array<PriceData>()
     const productAccountKeyToProduct = new Map<string, Product>()
     const currentSlot = await this.connection.getSlot(this.commitment)

@@ -19,7 +19,8 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "example": "npm run build && node lib/example_usage.js"
+    "ws_example": "npm run build && node lib/example_ws_usage.js",
+    "http_example": "npm run build && node lib/example_http_usage.js"
   },
   "keywords": [
     "pyth",
