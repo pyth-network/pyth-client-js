@@ -1,2 +1,6 @@
 node_modules
 /lib
+
+# IntelliJ temp files
+.idea
+*.iml
