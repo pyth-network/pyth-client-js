@@ -112,7 +112,7 @@ export interface PriceData extends Base {
   previousPrice: number
   previousConfidenceComponent: bigint
   previousConfidence: number
-  previousTimestamp: bigint,
+  previousTimestamp: bigint
   priceComponents: PriceComponent[]
   aggregate: Price
   // The current price and confidence and status. The typical use of this interface is to consume these three fields.
