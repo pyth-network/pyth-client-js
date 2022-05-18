@@ -100,8 +100,7 @@ export interface PriceData extends Base {
   validSlot: bigint
   emaPrice: Ema
   emaConfidence: Ema
-  drv1Component: bigint
-  drv1: number
+  timestamp: bigint
   minPublishers: number
   drv2: number
   drv3: number
@@ -113,8 +112,7 @@ export interface PriceData extends Base {
   previousPrice: number
   previousConfidenceComponent: bigint
   previousConfidence: number
-  drv5Component: bigint
-  drv5: number
+  previousTimestamp: bigint
   priceComponents: PriceComponent[]
   aggregate: Price
   // The current price and confidence and status. The typical use of this interface is to consume these three fields.
@@ -276,9 +274,8 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   const emaPrice = parseEma(data.slice(48, 72), exponent)
   // exponential moving average confidence interval
   const emaConfidence = parseEma(data.slice(72, 96), exponent)
-  // space for future derived values
-  const drv1Component = readBigInt64LE(data, 96)
-  const drv1 = Number(drv1Component) * 10 ** exponent
+  // timestamp of the current price
+  const timestamp = readBigInt64LE(data, 96)
   // minimum number of publishers for status to be TRADING
   const minPublishers = data.readUInt8(104)
   // space for future derived values
@@ -300,8 +297,7 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   const previousConfidenceComponent = readBigUInt64LE(data, 192)
   const previousConfidence = Number(previousConfidenceComponent) * 10 ** exponent
   // space for future derived values
-  const drv5Component = readBigInt64LE(data, 200)
-  const drv5 = Number(drv5Component) * 10 ** exponent
+  const previousTimestamp = readBigInt64LE(data, 200)
   const aggregate = parsePriceInfo(data.slice(208, 240), exponent)
 
   let status = aggregate.status
@@ -350,8 +346,7 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     validSlot,
     emaPrice,
     emaConfidence,
-    drv1Component,
-    drv1,
+    timestamp,
     minPublishers,
     drv2,
     drv3,
@@ -363,8 +358,7 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     previousPrice,
     previousConfidenceComponent,
     previousConfidence,
-    drv5Component,
-    drv5,
+    previousTimestamp,
     aggregate,
     priceComponents,
     price,
