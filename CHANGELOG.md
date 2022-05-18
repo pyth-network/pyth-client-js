@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.7.0
+  Added timestamp fields (overwriting existing reserved space)
+
 ## 2.6.3
 
 ### Changed
