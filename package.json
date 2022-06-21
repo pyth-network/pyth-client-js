@@ -29,7 +29,9 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
+    "@solana/web3.js": "^1.30.2",
     "@types/jest": "^26.0.23",
+    "@types/node-fetch": "^2.6.2",
     "jest": "^27.3.1",
     "prettier": "^2.3.0",
     "ts-jest": "^27.0.7",
@@ -38,7 +40,9 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.30.2",
     "buffer": "^6.0.1"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.30.2"
   }
 }
