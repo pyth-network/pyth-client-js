@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.7.1
+  Moved solana/web3 to peerDependencies 
+
 ## 2.7.0
   Added timestamp fields (overwriting existing reserved space)
 
