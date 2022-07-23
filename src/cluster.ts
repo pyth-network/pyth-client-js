@@ -25,7 +25,7 @@ export function getPythProgramKeyForCluster(cluster: PythCluster): PublicKey {
 
 /** Retrieves the RPC API URL for the specified Pyth cluster  */
 export function getPythClusterApiUrl(cluster: PythCluster): string {
-  //TODO: Add pythnet when it's ready
+  // TODO: Add pythnet when it's ready
   if (cluster === 'pythtest') {
     return 'https://api.pythtest.pyth.network'
   } else {
