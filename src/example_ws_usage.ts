@@ -1,10 +1,10 @@
-import { Cluster, clusterApiUrl, Connection } from '@solana/web3.js'
+import { Connection } from '@solana/web3.js'
 import { PythConnection } from './PythConnection'
-import { getPythProgramKeyForCluster } from './cluster'
+import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
 import { PriceStatus } from '.'
 
-const SOLANA_CLUSTER_NAME: Cluster = 'mainnet-beta'
-const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER_NAME))
+const SOLANA_CLUSTER_NAME: PythCluster = 'mainnet-beta'
+const connection = new Connection(getPythClusterApiUrl(SOLANA_CLUSTER_NAME))
 const pythPublicKey = getPythProgramKeyForCluster(SOLANA_CLUSTER_NAME)
 
 const pythConnection = new PythConnection(connection, pythPublicKey)

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.2
+### Changed
+- Added pythtest program key and cluster url
+- Updated examples to work with pythtest
+
 ## 2.7.1
   Moved solana/web3 to peerDependencies 
 
