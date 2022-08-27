@@ -37,6 +37,7 @@ export class PythConnection {
   priceAccountKeyToProductAccountKey: Record<string, string> = {}
 
   callbacks: PythPriceCallback[] = []
+  subscriptionIDs: number[] = []
 
   private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>) {
     const { priceAccountKey, type, product } = parseProductData(account.data)
@@ -106,13 +107,15 @@ export class PythConnection {
       this.handleAccount(account.pubkey, account.account, true, currentSlot)
     }
 
-    this.connection.onProgramAccountChange(
+    const subscriptionID = this.connection.onProgramAccountChange(
       this.pythProgramKey,
       (keyedAccountInfo, context) => {
         this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false, context.slot)
       },
       this.commitment,
     )
+
+    this.subscriptionIDs.push(subscriptionID)
   }
 
   /** Register callback to receive price updates. */
@@ -122,9 +125,12 @@ export class PythConnection {
 
   /** Stop receiving price updates. Note that this also currently deletes all registered callbacks. */
   public async stop() {
-    // There's no way to actually turn off the solana web3 subscription x_x, but there should be.
-    // Leave this method in so we don't have to update our API when solana fixes theirs.
     // In the interim, delete callbacks.
     this.callbacks = []
+
+    // Unsubscribe from Solana subscriptions
+    for (const subscriptionID of this.subscriptionIDs) {
+      this.connection.removeProgramAccountChangeListener(subscriptionID)
+    }
   }
 }
