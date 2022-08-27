@@ -41,12 +41,14 @@ export class PythHttpClient {
     const prices = new Array<PriceData>()
 
     // Retrieve data from blockchain
-    const accountList = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
+    const getProgramAccounts = this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
+    const getSlot = this.connection.getSlot(this.commitment)
+
+    const [accountList, currentSlot] = await Promise.all([getProgramAccounts, getSlot])
 
     // Populate products and prices
     const priceDataQueue = new Array<PriceData>()
     const productAccountKeyToProduct = new Map<string, Product>()
-    const currentSlot = await this.connection.getSlot(this.commitment)
 
     accountList.forEach((singleAccount) => {
       const base = parseBaseData(singleAccount.account.data)
