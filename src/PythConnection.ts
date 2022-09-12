@@ -18,6 +18,7 @@ import {
 
 const ONES = '11111111111111111111111111111111'
 
+/** An update to the content of the solana account at `key` that occurred at `slot`. */
 export type AccountUpdate<T> = {
   key: PublicKey,
   accountInfo: AccountInfo<T>,
