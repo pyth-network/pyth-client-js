@@ -18,11 +18,23 @@ import {
 
 const ONES = '11111111111111111111111111111111'
 
+export type AccountUpdate<T> = {
+  key: PublicKey,
+  accountInfo: AccountInfo<T>,
+  slot: number,
+}
+
 /**
  * Type of callback invoked whenever a pyth price account changes. The callback additionally
- * gets access product, which contains the metadata for this price account (e.g., that the symbol is "BTC/USD")
+ * gets `product`, which contains the metadata for this price account (e.g., that the symbol is "BTC/USD")
  */
 export type PythPriceCallback = (product: Product, price: PriceData) => void
+
+/**
+ * A price callback that additionally includes the raw solana account information. Use this if you need
+ * access to account keys and such.
+ */
+export type PythVerbosePriceCallback = (product: AccountUpdate<ProductData>, price: AccountUpdate<PriceData>) => void
 
 /**
  * Reads Pyth price data from a solana web3 connection. This class uses a callback-driven model,
@@ -33,22 +45,29 @@ export class PythConnection {
   pythProgramKey: PublicKey
   commitment: Commitment
 
-  productAccountKeyToProduct: Record<string, Product> = {}
+  productAccountKeyToProduct: Record<string, AccountUpdate<ProductData>> = {}
   priceAccountKeyToProductAccountKey: Record<string, string> = {}
 
-  callbacks: PythPriceCallback[] = []
+  callbacks: PythVerbosePriceCallback[] = []
 
-  private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>) {
-    const { priceAccountKey, type, product } = parseProductData(account.data)
-    this.productAccountKeyToProduct[key.toString()] = product
-    if (priceAccountKey.toString() !== ONES) {
-      this.priceAccountKeyToProductAccountKey[priceAccountKey.toString()] = key.toString()
+  private handleProductAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number) {
+    const productData = parseProductData(account.data)
+    this.productAccountKeyToProduct[key.toString()] = {
+      key,
+      slot,
+      accountInfo: {
+        ...account,
+        data: productData,
+      }
+    }
+    if (productData.priceAccountKey.toString() !== ONES) {
+      this.priceAccountKeyToProductAccountKey[productData.priceAccountKey.toString()] = key.toString()
     }
   }
 
   private handlePriceAccount(key: PublicKey, account: AccountInfo<Buffer>, slot: number) {
-    const product = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
-    if (product === undefined) {
+    const productUpdate = this.productAccountKeyToProduct[this.priceAccountKeyToProductAccountKey[key.toString()]]
+    if (productUpdate === undefined) {
       // This shouldn't happen since we're subscribed to all of the program's accounts,
       // but let's be good defensive programmers.
       throw new Error(
@@ -57,9 +76,17 @@ export class PythConnection {
     }
 
     const priceData = parsePriceData(account.data, slot)
+    const priceUpdate = {
+      key,
+      slot,
+      accountInfo: {
+        ...account,
+        data: priceData
+      }
+    }
 
     for (const callback of this.callbacks) {
-      callback(product, priceData)
+      callback(productUpdate, priceUpdate)
     }
   }
 
@@ -72,7 +99,7 @@ export class PythConnection {
           // We can skip these because we're going to get every account owned by this program anyway.
           break
         case AccountType.Product:
-          this.handleProductAccount(key, account)
+          this.handleProductAccount(key, account, slot)
           break
         case AccountType.Price:
           if (!productOnly) {
@@ -117,7 +144,12 @@ export class PythConnection {
 
   /** Register callback to receive price updates. */
   public onPriceChange(callback: PythPriceCallback) {
-    this.callbacks.push(callback)
+    this.callbacks.push((product, price) => callback(product.accountInfo.data.product, price.accountInfo.data));
+  }
+
+  /** Register a verbose callback to receive price updates. */
+  public onPriceChangeVerbose(callback: PythVerbosePriceCallback) {
+    this.callbacks.push(callback);
   }
 
   /** Stop receiving price updates. Note that this also currently deletes all registered callbacks. */
