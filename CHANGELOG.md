@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.8.0
+- Added `onPriceChangeVerbose` callback to `PythConnection` to support getting account keys and slots on each price update.
+
 ## 2.7.2
 ### Changed
 - Added pythtest program key and cluster url

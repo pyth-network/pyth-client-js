@@ -3,12 +3,15 @@ import { PythConnection } from './PythConnection'
 import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
 import { PriceStatus } from '.'
 
-const SOLANA_CLUSTER_NAME: PythCluster = 'mainnet-beta'
+const SOLANA_CLUSTER_NAME: PythCluster = 'devnet'
 const connection = new Connection(getPythClusterApiUrl(SOLANA_CLUSTER_NAME))
 const pythPublicKey = getPythProgramKeyForCluster(SOLANA_CLUSTER_NAME)
 
 const pythConnection = new PythConnection(connection, pythPublicKey)
-pythConnection.onPriceChange((product, price) => {
+pythConnection.onPriceChangeVerbose((productAccount, priceAccount) => {
+  // The arguments to the callback include solana account information / the update slot if you need it.
+  const product = productAccount.accountInfo.data.product;
+  const price = priceAccount.accountInfo.data;
   // sample output:
   // SRM/USD: $8.68725 ±$0.0131
   if (price.price && price.confidence) {
