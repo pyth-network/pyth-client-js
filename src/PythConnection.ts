@@ -1,28 +1,21 @@
-import { Connection, PublicKey, clusterApiUrl, Cluster, Commitment, AccountInfo, Account } from '@solana/web3.js'
+import { Connection, PublicKey, Commitment, AccountInfo } from '@solana/web3.js'
 import {
-  Base,
-  Magic,
-  parseMappingData,
   parseBaseData,
   parsePriceData,
   parseProductData,
-  Price,
   PriceData,
   Product,
   ProductData,
-  Version,
   AccountType,
-  MAX_SLOT_DIFFERENCE,
-  PriceStatus,
 } from './index'
 
 const ONES = '11111111111111111111111111111111'
 
 /** An update to the content of the solana account at `key` that occurred at `slot`. */
 export type AccountUpdate<T> = {
-  key: PublicKey,
-  accountInfo: AccountInfo<T>,
-  slot: number,
+  key: PublicKey
+  accountInfo: AccountInfo<T>
+  slot: number
 }
 
 /**
@@ -59,7 +52,7 @@ export class PythConnection {
       accountInfo: {
         ...account,
         data: productData,
-      }
+      },
     }
     if (productData.priceAccountKey.toString() !== ONES) {
       this.priceAccountKeyToProductAccountKey[productData.priceAccountKey.toString()] = key.toString()
@@ -82,8 +75,8 @@ export class PythConnection {
       slot,
       accountInfo: {
         ...account,
-        data: priceData
-      }
+        data: priceData,
+      },
     }
 
     for (const callback of this.callbacks) {
@@ -145,12 +138,12 @@ export class PythConnection {
 
   /** Register callback to receive price updates. */
   public onPriceChange(callback: PythPriceCallback) {
-    this.callbacks.push((product, price) => callback(product.accountInfo.data.product, price.accountInfo.data));
+    this.callbacks.push((product, price) => callback(product.accountInfo.data.product, price.accountInfo.data))
   }
 
   /** Register a verbose callback to receive price updates. */
   public onPriceChangeVerbose(callback: PythVerbosePriceCallback) {
-    this.callbacks.push(callback);
+    this.callbacks.push(callback)
   }
 
   /** Stop receiving price updates. Note that this also currently deletes all registered callbacks. */
