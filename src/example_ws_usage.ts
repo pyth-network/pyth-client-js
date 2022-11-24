@@ -3,9 +3,9 @@ import { PythConnection } from './PythConnection'
 import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
 import { PriceStatus } from '.'
 
-const SOLANA_CLUSTER_NAME: PythCluster = 'devnet'
-const connection = new Connection(getPythClusterApiUrl(SOLANA_CLUSTER_NAME))
-const pythPublicKey = getPythProgramKeyForCluster(SOLANA_CLUSTER_NAME)
+const PYTHNET_CLUSTER_NAME: PythCluster = 'pythnet'
+const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME))
+const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME)
 
 const pythConnection = new PythConnection(connection, pythPublicKey)
 pythConnection.onPriceChangeVerbose((productAccount, priceAccount) => {
@@ -13,7 +13,7 @@ pythConnection.onPriceChangeVerbose((productAccount, priceAccount) => {
   const product = productAccount.accountInfo.data.product;
   const price = priceAccount.accountInfo.data;
   // sample output:
-  // SRM/USD: $8.68725 ±$0.0131
+  // SOL/USD: $14.627930000000001 ±$0.01551797
   if (price.price && price.confidence) {
     // tslint:disable-next-line:no-console
     console.log(`${product.symbol}: $${price.price} \xB1$${price.confidence}`)
