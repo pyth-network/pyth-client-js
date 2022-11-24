@@ -2,9 +2,9 @@ import { Connection } from '@solana/web3.js'
 import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
 import { PriceStatus, PythHttpClient } from '.'
 
-const SOLANA_CLUSTER_NAME: PythCluster = 'pythnet'
-const connection = new Connection(getPythClusterApiUrl(SOLANA_CLUSTER_NAME))
-const pythPublicKey = getPythProgramKeyForCluster(SOLANA_CLUSTER_NAME)
+const PYTHNET_CLUSTER_NAME: PythCluster = 'pythnet'
+const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME))
+const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME)
 
 async function runQuery(): Promise<void> {
   const pythClient = new PythHttpClient(connection, pythPublicKey)

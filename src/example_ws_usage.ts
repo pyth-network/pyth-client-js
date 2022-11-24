@@ -3,9 +3,9 @@ import { PythConnection } from './PythConnection'
 import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
 import { PriceStatus } from '.'
 
-const SOLANA_CLUSTER_NAME: PythCluster = 'pythnet'
-const connection = new Connection(getPythClusterApiUrl(SOLANA_CLUSTER_NAME))
-const pythPublicKey = getPythProgramKeyForCluster(SOLANA_CLUSTER_NAME)
+const PYTHNET_CLUSTER_NAME: PythCluster = 'pythnet'
+const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME))
+const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME)
 
 const pythConnection = new PythConnection(connection, pythPublicKey)
 pythConnection.onPriceChangeVerbose((productAccount, priceAccount) => {
