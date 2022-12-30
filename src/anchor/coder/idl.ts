@@ -1,3 +1,8 @@
+// Borrowed from coral-xyz/anchor
+//
+// https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/coder/borsh/idl.ts
+
+
 import camelCase from 'camelcase'
 import { Layout } from 'buffer-layout'
 import * as borsh from '@coral-xyz/borsh'
@@ -123,9 +128,9 @@ export class IdlCoder {
       return borsh.struct(fieldLayouts, name)
     } else if (typeDef.type.kind === 'enum') {
       const variants = typeDef.type.variants.map((variant: IdlEnumVariant) => {
-        const name = camelCase(variant.name)
+        const variantName = camelCase(variant.name)
         if (variant.fields === undefined) {
-          return borsh.struct([], name)
+          return borsh.struct([], variantName)
         }
         const fieldLayouts = variant.fields.map((f: IdlField | IdlType, i: number) => {
           if (!f.hasOwnProperty('name')) {
@@ -137,7 +142,7 @@ export class IdlCoder {
           // the check before would've errored
           return IdlCoder.fieldLayout(f as IdlField, types)
         })
-        return borsh.struct(fieldLayouts, name)
+        return borsh.struct(fieldLayouts, variantName)
       })
 
       if (name !== undefined) {
