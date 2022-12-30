@@ -2,7 +2,6 @@
 //
 // https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/coder/borsh/idl.ts
 
-
 import camelCase from 'camelcase'
 import { Layout } from 'buffer-layout'
 import * as borsh from '@coral-xyz/borsh'

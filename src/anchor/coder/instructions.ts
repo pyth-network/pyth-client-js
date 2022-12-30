@@ -2,7 +2,6 @@
 //
 // https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/coder/borsh/instruction.ts
 
-
 import bs58 from 'bs58'
 import { Buffer } from 'buffer'
 import { Layout } from 'buffer-layout'
