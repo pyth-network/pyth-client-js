@@ -39,7 +39,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     const discriminatorLayouts = new Map()
     const ixDiscriminator = new Map()
     idl.instructions.forEach((ix) => {
-      let pythIx = ix as PythIdlInstruction
+      const pythIx = ix as PythIdlInstruction
       let discriminatorLength: number
       if (pythIx.discriminant) {
         discriminatorLayouts.set(bs58.encode(Buffer.from(pythIx.discriminant.value)), {
@@ -51,7 +51,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       } else {
         throw new Error(`All instructions must have a discriminator`)
       }
-      if (this.discriminatorLength && this.discriminatorLength != discriminatorLength) {
+      if (this.discriminatorLength && this.discriminatorLength !== discriminatorLength) {
         throw new Error(`All instructions must have the same discriminator length`)
       } else {
         this.discriminatorLength = discriminatorLength
@@ -87,7 +87,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
 
   private static parseIxLayout(idl: Idl): Map<string, Layout> {
     const ixLayouts = idl.instructions.map((ix): [string, Layout<unknown>] => {
-      let fieldLayouts = ix.args.map((arg: IdlField) =>
+      const fieldLayouts = ix.args.map((arg: IdlField) =>
         IdlCoder.fieldLayout(arg, Array.from([...(idl.accounts ?? []), ...(idl.types ?? [])])),
       )
       const name = camelCase(ix.name)
@@ -104,9 +104,9 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     if (typeof ix === 'string') {
       ix = encoding === 'hex' ? Buffer.from(ix, 'hex') : Buffer.from(bs58.decode(ix))
     }
-    let sighash = bs58.encode(ix.subarray(0, this.discriminatorLength))
-    let data = ix.subarray(this.discriminatorLength)
-    const decoder = this.discriminatorLayouts.get(sighash)
+    const discriminator = bs58.encode(ix.subarray(0, this.discriminatorLength))
+    const data = ix.subarray(this.discriminatorLength)
+    const decoder = this.discriminatorLayouts.get(discriminator)
     if (!decoder) {
       return null
     }

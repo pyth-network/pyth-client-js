@@ -18,9 +18,9 @@ export class PythOracleCoder implements Coder {
 
   constructor(idl: Idl) {
     this.accounts = new PythOracleAccountCoder(idl)
-    this.events = new PythOracleEventCoder(idl)
+    this.events = new PythOracleEventCoder()
     this.instruction = new PythOracleInstructionCoder(idl)
-    this.state = new PythOracleStateCoder(idl)
-    this.types = new PythOracleTypesCoder(idl)
+    this.state = new PythOracleStateCoder()
+    this.types = new PythOracleTypesCoder()
   }
 }

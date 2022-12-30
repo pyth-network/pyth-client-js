@@ -97,9 +97,9 @@ export class IdlCoder {
           }
           return IdlCoder.typeDefLayout(filtered[0], types, fieldName)
         } else if ('array' in field.type) {
-          let arrayTy = field.type.array[0]
-          let arrayLen = field.type.array[1]
-          let innerLayout = IdlCoder.fieldLayout(
+          const arrayTy = field.type.array[0]
+          const arrayLen = field.type.array[1]
+          const innerLayout = IdlCoder.fieldLayout(
             {
               name: undefined,
               type: arrayTy,
@@ -122,7 +122,7 @@ export class IdlCoder {
       })
       return borsh.struct(fieldLayouts, name)
     } else if (typeDef.type.kind === 'enum') {
-      let variants = typeDef.type.variants.map((variant: IdlEnumVariant) => {
+      const variants = typeDef.type.variants.map((variant: IdlEnumVariant) => {
         const name = camelCase(variant.name)
         if (variant.fields === undefined) {
           return borsh.struct([], name)

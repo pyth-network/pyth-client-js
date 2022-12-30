@@ -1,8 +1,6 @@
 import { Idl, TypesCoder } from '@coral-xyz/anchor'
 
 export class PythOracleTypesCoder implements TypesCoder {
-  constructor(_idl: Idl) {}
-
   encode<T = any>(_name: string, _type: T): Buffer {
     throw new Error('Pyth oracle does not have user-defined types')
   }
