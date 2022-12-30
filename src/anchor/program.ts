@@ -7,6 +7,8 @@ export function pythOracleProgram(programId: PublicKey, provider: AnchorProvider
   return new Program<PythOracle>(IDL as PythOracle, programId, provider, new PythOracleCoder(IDL as Idl))
 }
 
+export {PythOracleCoder} from './coder'
+
 export type PythOracle = {
   version: '2.20.0'
   name: 'pyth_oracle'
