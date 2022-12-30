@@ -78,12 +78,7 @@
           "isSigner": true
         }
       ],
-      "args": [
-        {
-          "name": "newData",
-          "type": "bytes"
-        }
-      ]
+      "args": []
     },
     {
       "name": "addPrice",
@@ -107,11 +102,11 @@
       ],
       "args": [
         {
-          "name": "expo_",
+          "name": "expo",
           "type": "i32"
         },
         {
-          "name": "ptype_",
+          "name": "pType",
           "type": "u32"
         }
       ]
@@ -133,7 +128,7 @@
       ],
       "args": [
         {
-          "name": "pub_",
+          "name": "pub",
           "type": "publicKey"
         }
       ]
@@ -155,7 +150,7 @@
       ],
       "args": [
         {
-          "name": "pub_",
+          "name": "pub",
           "type": "publicKey"
         }
       ]
@@ -182,23 +177,23 @@
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
@@ -225,23 +220,23 @@
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
@@ -263,11 +258,11 @@
       ],
       "args": [
         {
-          "name": "expo_",
+          "name": "expo",
           "type": "i32"
         },
         {
-          "name": "ptype_",
+          "name": "pType",
           "type": "u32"
         }
       ]
@@ -289,8 +284,14 @@
       ],
       "args": [
         {
-          "name": "min_pub_",
+          "name": "minPub",
           "type": "u8"
+        },
+        {
+          "name": "unused",
+          "type": {
+            "array": ["u8", 3]
+          }
         }
       ]
     },
@@ -316,23 +317,23 @@
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
@@ -353,267 +354,100 @@
         }
       ],
       "args": []
-    }
-  ],
-  "accounts": [
-    {
-      "name": "MappingAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "header",
-            "type": {
-              "defined": "AccountHeader"
-            }
-          },
-          {
-            "name": "number_of_products",
-            "type": "u32"
-          },
-          {
-            "name": "unused_",
-            "type": "u32"
-          },
-          {
-            "name": "next_mapping_account",
-            "type": "publicKey"
-          },
-          {
-            "name": "products_list",
-            "type": {
-              "array": ["publicKey", 640]
-            }
-          }
-        ]
-      }
     },
     {
-      "name": "PriceAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "header",
-            "type": {
-              "defined": "AccountHeader"
-            }
-          },
-          {
-            "name": "price_type",
-            "type": "u32"
-          },
-          {
-            "name": "exponent",
-            "type": "i32"
-          },
-          {
-            "name": "num_",
-            "type": "u32"
-          },
-          {
-            "name": "num_qt_",
-            "type": "u32"
-          },
-          {
-            "name": "last_slot_",
-            "type": "u64"
-          },
-          {
-            "name": "valid_slot_",
-            "type": "publicKey"
-          },
-          {
-            "name": "twap_",
-            "type": {
-              "defined": "PriceEma"
-            }
-          },
-          {
-            "name": "twac_",
-            "type": {
-              "defined": "PriceEma"
-            }
-          },
-          {
-            "name": "timestamp_",
-            "type": "i64"
-          },
-          {
-            "name": "min_pub_",
-            "type": "u8"
-          },
-          {
-            "name": "unused_1_",
-            "type": "i8"
-          },
-          {
-            "name": "unused_2_",
-            "type": "i16"
-          },
-          {
-            "name": "unused_3_",
-            "type": "i32"
-          },
-          {
-            "name": "productAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "next_price_account",
-            "type": "publicKey"
-          },
-          {
-            "name": "prev_slot_",
-            "type": "u64"
-          },
-          {
-            "name": "prev_price_",
-            "type": "i64"
-          },
-          {
-            "name": "prev_conf_",
-            "type": "u64"
-          },
-          {
-            "name": "prev_timestamp_",
-            "type": "i64"
-          },
-          {
-            "name": "agg_",
-            "type": {
-              "defined": "PriceInfo"
-            }
-          },
-          {
-            "name": "comp_",
-            "type": {
-              "array": [
-                {
-                  "defined": "PriceComponent"
-                },
-                32
-              ]
-            }
-          }
-        ]
-      }
+      "name": "delPrice",
+      "discriminant": { "value": [2, 0, 0, 0, 15, 0, 0, 0] },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "productAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "priceAccount",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
     },
     {
-      "name": "ProductAccount",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "header",
-            "type": {
-              "defined": "AccountHeader"
-            }
-          },
-          {
-            "name": "first_price_account",
-            "type": "publicKey"
-          }
-        ]
-      }
-    }
-  ],
-  "types": [
-    {
-      "name": "AccountHeader",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "magic_number",
-            "type": "u32"
-          },
-          {
-            "name": "version",
-            "type": "u32"
-          },
-          {
-            "name": "account_type",
-            "type": "u32"
-          },
-          {
-            "name": "size",
-            "type": "u32"
-          }
-        ]
-      }
+      "name": "delProduct",
+      "discriminant": { "value": [2, 0, 0, 0, 16, 0, 0, 0] },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mappingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "productAccount",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
     },
     {
-      "name": "PriceEma",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "val_",
-            "type": "i64"
-          },
-          {
-            "name": "numer_",
-            "type": "i64"
-          },
-          {
-            "name": "denom_",
-            "type": "i64"
+      "name": "updPermissions",
+      "discriminant": { "value": [2, 0, 0, 0, 17, 0, 0, 0] },
+      "accounts": [
+        {
+          "name": "upgradeAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "programAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "programDataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": true,
+          "isSigner": false,
+          "pda": {
+            "seeds": [{
+              "kind": "const",
+              "type": "string",
+              "value": "permissions"
+          }]
           }
-        ]
-      }
-    },
-    {
-      "name": "PriceInfo",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "price_",
-            "type": "i64"
-          },
-          {
-            "name": "conf_",
-            "type": "u64"
-          },
-          {
-            "name": "status_",
-            "type": "u32"
-          },
-          {
-            "name": "corp_act_status_",
-            "type": "u32"
-          },
-          {
-            "name": "pub_slot_",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PriceComponent",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pub_",
-            "type": "publicKey"
-          },
-          {
-            "name": "agg_",
-            "type": {
-              "defined": "PriceInfo"
-            }
-          },
-          {
-            "name": "latest_",
-            "type": {
-              "defined": "PriceInfo"
-            }
-          }
-        ]
-      }
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [        {
+        "name": "masterAuthority",
+        "type": "publicKey"
+      },
+      {
+        "name": "dataCurationAuthority",
+        "type": "publicKey"
+      },
+      {
+        "name": "securityAuthority",
+        "type": "publicKey"
+      }]
     }
   ]
 }
