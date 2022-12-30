@@ -3,6 +3,11 @@ import { Program, AnchorProvider, Idl } from '@coral-xyz/anchor'
 import { PythOracleCoder } from './coder'
 import IDL from './idl.json'
 
+/** The Pyth program is not fully compatible with Anchor idls.
+ * However it can be interacted with from Anchor clients by using PythOracleCoder from this library.
+ * It currently only supports instructions. To deserialize accounts one can use the non-Anchor
+ * parsing functions from this package.
+ */
 export function pythOracleProgram(programId: PublicKey, provider: AnchorProvider): Program<PythOracle> {
   return new Program<PythOracle>(IDL as PythOracle, programId, provider, new PythOracleCoder(IDL as Idl))
 }
