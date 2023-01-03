@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.9.0
+- Add Anchor client
 ## 2.8.0
 - Added `onPriceChangeVerbose` callback to `PythConnection` to support getting account keys and slots on each price update.
 
