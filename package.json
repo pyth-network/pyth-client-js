@@ -29,8 +29,11 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
+    "@coral-xyz/anchor": "^0.26.0",
     "@solana/web3.js": "^1.30.2",
-    "@types/jest": "^26.0.23",
+    "@types/bn.js": "^5.1.1",
+    "@types/bs58": "^4.0.1",
+    "@types/jest": "^27.0.7",
     "@types/node-fetch": "^2.6.2",
     "jest": "^27.3.1",
     "prettier": "^2.3.0",
@@ -43,6 +46,7 @@
     "buffer": "^6.0.1"
   },
   "peerDependencies": {
+    "@coral-xyz/anchor": "^0.26.0",
     "@solana/web3.js": "^1.30.2"
   }
 }

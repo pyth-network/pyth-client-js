@@ -370,3 +370,4 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
 export { PythConnection } from './PythConnection'
 export { PythHttpClient } from './PythHttpClient'
 export { getPythProgramKeyForCluster } from './cluster'
+export { pythOracleProgram, PythOracleCoder } from './anchor'
