@@ -1,13 +1,5 @@
 import { Connection, PublicKey, Commitment, AccountInfo } from '@solana/web3.js'
-import {
-  parseBaseData,
-  parsePriceData,
-  parseProductData,
-  PriceData,
-  Product,
-  ProductData,
-  AccountType,
-} from './index'
+import { parseBaseData, parsePriceData, parseProductData, PriceData, Product, ProductData, AccountType } from './index'
 
 const ONES = '11111111111111111111111111111111'
 
