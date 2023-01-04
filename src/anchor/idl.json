@@ -56,7 +56,7 @@
           "isSigner": true
         },
         {
-          "name": "newProductAccount",
+          "name": "productAccount",
           "isMut": true,
           "isSigner": true
         }
