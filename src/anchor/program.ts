@@ -12,7 +12,12 @@ export function pythOracleProgram(programId: PublicKey, provider: AnchorProvider
   return new Program<PythOracle>(IDL as PythOracle, programId, provider, new PythOracleCoder(IDL as Idl))
 }
 
-export { PythOracleCoder } from './coder'
+export function pythOracleCoder(): PythOracleCoder {
+  return new PythOracleCoder(IDL as PythOracle);
+}
+
+export { default as pythIdl } from "./idl.json";
+
 
 export type PythOracle = {
   version: '2.20.0'
@@ -72,7 +77,7 @@ export type PythOracle = {
           isSigner: true
         },
         {
-          name: 'newProductAccount'
+          name: 'productAccount'
           isMut: true
           isSigner: true
         },

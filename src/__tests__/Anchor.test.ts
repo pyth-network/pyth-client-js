@@ -1,7 +1,7 @@
 import { AnchorProvider, Wallet } from '@coral-xyz/anchor'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { BN } from 'bn.js'
-import { getPythProgramKeyForCluster, pythOracleProgram, PythOracleCoder } from '../index'
+import { getPythProgramKeyForCluster, pythOracleProgram, pythOracleCoder } from '../index'
 
 test('Anchor', (done) => {
   jest.setTimeout(60000)
@@ -17,7 +17,7 @@ test('Anchor', (done) => {
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 0, 0, 0, 0]))
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('initMapping')
       expect(decoded?.data).toStrictEqual({})
     })
@@ -27,7 +27,7 @@ test('Anchor', (done) => {
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 1, 0, 0, 0]))
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('addMapping')
       expect(decoded?.data).toStrictEqual({})
     })
@@ -37,7 +37,7 @@ test('Anchor', (done) => {
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 3, 0, 0, 0]))
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updProduct')
       expect(decoded?.data).toStrictEqual({})
     })
@@ -48,7 +48,7 @@ test('Anchor', (done) => {
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]))
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('addPrice')
       expect(decoded?.data).toStrictEqual({ expo: 1, pType: 1 })
     })
@@ -64,7 +64,7 @@ test('Anchor', (done) => {
           0, 0, 5,
         ]),
       )
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('addPublisher')
       expect(decoded?.data.pub.equals(new PublicKey(5))).toBeTruthy()
     })
@@ -80,7 +80,7 @@ test('Anchor', (done) => {
           0, 0, 0, 0,
         ]),
       )
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updPrice')
       expect(decoded?.data.status === 1).toBeTruthy()
       expect(decoded?.data.price.eq(new BN(42))).toBeTruthy()
@@ -99,7 +99,7 @@ test('Anchor', (done) => {
           0, 0, 0, 0,
         ]),
       )
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updPriceNoFailOnError')
       expect(decoded?.data.status === 1).toBeTruthy()
       expect(decoded?.data.price.eq(new BN(42))).toBeTruthy()
@@ -118,7 +118,7 @@ test('Anchor', (done) => {
           0, 0, 0, 0,
         ]),
       )
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('aggPrice')
       expect(decoded?.data.status === 1).toBeTruthy()
       expect(decoded?.data.price.eq(new BN(42))).toBeTruthy()
@@ -132,7 +132,7 @@ test('Anchor', (done) => {
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 12, 0, 0, 0, 5, 0, 0, 0]))
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('setMinPub')
       expect(decoded?.data.minPub === 5).toBeTruthy()
     })
@@ -155,7 +155,7 @@ test('Anchor', (done) => {
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8,
         ]),
       )
-      const decoded = (pythOracle.coder as PythOracleCoder).instruction.decode(instruction.data)
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updPermissions')
       expect(decoded?.data.masterAuthority.equals(new PublicKey(6))).toBeTruthy()
       expect(decoded?.data.dataCurationAuthority.equals(new PublicKey(7))).toBeTruthy()
