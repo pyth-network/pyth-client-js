@@ -37,6 +37,7 @@ export enum AccountType {
   Product,
   Price,
   Test,
+  Permission,
 }
 
 const empty32Buffer = Buffer.alloc(32)
@@ -124,6 +125,12 @@ export interface PriceData extends Base {
   price: number | undefined
   confidence: number | undefined
   status: PriceStatus
+}
+
+export interface PermissionData extends Base {
+  masterAuthority: PublicKey
+  dataCurationAuthority: PublicKey
+  securityAuthority: PublicKey
 }
 
 /** Parse data as a generic Pyth account. Use this method if you don't know the account type. */
@@ -364,6 +371,29 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     price,
     confidence,
     status,
+  }
+}
+
+export const parsePermissionData = (data: Buffer): PermissionData => {
+  // pyth magic number
+  const magic = data.readUInt32LE(0)
+  // program version
+  const version = data.readUInt32LE(4)
+  // account type
+  const type = data.readUInt32LE(8)
+  // price account size
+  const size = data.readUInt32LE(12)
+  const masterAuthority = new PublicKey(data.slice(16, 48))
+  const dataCurationAuthority = new PublicKey(data.slice(48, 80))
+  const securityAuthority = new PublicKey(data.slice(80, 112))
+  return {
+    magic,
+    version,
+    type,
+    size,
+    masterAuthority,
+    dataCurationAuthority,
+    securityAuthority,
   }
 }
 
