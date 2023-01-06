@@ -409,14 +409,9 @@
           "isSigner": true
         },
         {
-          "name": "programAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "programDataAccount",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false          
         },
         {
           "name": "permissionsAccount",
