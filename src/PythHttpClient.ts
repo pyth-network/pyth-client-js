@@ -58,7 +58,7 @@ export class PythHttpClient {
     const productAccountKeyToProduct = new Map<string, Product>()
     const currentSlot = await this.connection.getSlot(this.commitment)
 
-    // Initialize permission field
+    // Initialize permission field as undefined 
     let permissionData;
 
     accountList.forEach((singleAccount) => {
