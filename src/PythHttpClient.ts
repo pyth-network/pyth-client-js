@@ -59,7 +59,7 @@ export class PythHttpClient {
     const currentSlot = await this.connection.getSlot(this.commitment)
 
     // Initialize permission field
-    let permissionData = undefined
+    let permissionData;
 
     accountList.forEach((singleAccount) => {
       const base = parseBaseData(singleAccount.account.data)
