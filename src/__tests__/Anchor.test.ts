@@ -141,7 +141,6 @@ test('Anchor', (done) => {
     .updPermissions(new PublicKey(6), new PublicKey(7), new PublicKey(8))
     .accounts({
       upgradeAuthority: PublicKey.unique(),
-      programAccount: PublicKey.unique(),
       programDataAccount: PublicKey.unique(),
     })
     .instruction()

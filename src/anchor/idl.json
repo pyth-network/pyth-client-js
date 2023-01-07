@@ -409,11 +409,6 @@
           "isSigner": true
         },
         {
-          "name": "programAccount",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "programDataAccount",
           "isMut": false,
           "isSigner": false
@@ -423,11 +418,13 @@
           "isMut": true,
           "isSigner": false,
           "pda": {
-            "seeds": [{
-              "kind": "const",
-              "type": "string",
-              "value": "permissions"
-          }]
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
           }
         },
         {
@@ -436,18 +433,20 @@
           "isSigner": false
         }
       ],
-      "args": [        {
-        "name": "masterAuthority",
-        "type": "publicKey"
-      },
-      {
-        "name": "dataCurationAuthority",
-        "type": "publicKey"
-      },
-      {
-        "name": "securityAuthority",
-        "type": "publicKey"
-      }]
+      "args": [
+        {
+          "name": "masterAuthority",
+          "type": "publicKey"
+        },
+        {
+          "name": "dataCurationAuthority",
+          "type": "publicKey"
+        },
+        {
+          "name": "securityAuthority",
+          "type": "publicKey"
+        }
+      ]
     }
   ]
 }
