@@ -93,6 +93,7 @@ export class PythConnection {
           }
           break
         case AccountType.Test:
+        case AccountType.Permission:
           break
         default:
           throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)

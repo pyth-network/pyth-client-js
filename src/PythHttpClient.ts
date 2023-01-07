@@ -1,5 +1,14 @@
 import { Commitment, Connection, PublicKey } from '@solana/web3.js'
-import { Product, PriceData, parseProductData, parsePriceData, parseBaseData, AccountType } from '.'
+import {
+  Product,
+  PriceData,
+  parseProductData,
+  parsePriceData,
+  parseBaseData,
+  AccountType,
+  parsePermissionData,
+  PermissionData,
+} from '.'
 
 export interface PythHttpClientResult {
   assetTypes: string[]
@@ -11,6 +20,7 @@ export interface PythHttpClientResult {
   /** The current price of each product. */
   productPrice: Map<string, PriceData>
   prices: PriceData[]
+  permissionData: PermissionData | undefined
 }
 
 /**
@@ -48,6 +58,9 @@ export class PythHttpClient {
     const productAccountKeyToProduct = new Map<string, Product>()
     const currentSlot = await this.connection.getSlot(this.commitment)
 
+    // Initialize permission field as undefined 
+    let permissionData;
+
     accountList.forEach((singleAccount) => {
       const base = parseBaseData(singleAccount.account.data)
       if (base) {
@@ -70,6 +83,10 @@ export class PythHttpClient {
             break
           case AccountType.Test:
             break
+          case AccountType.Permission:
+            permissionData = parsePermissionData(singleAccount.account.data)
+            break
+
           default:
             throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
         }
@@ -92,6 +109,7 @@ export class PythHttpClient {
       productFromSymbol,
       productPrice,
       prices,
+      permissionData,
     }
 
     return result
