@@ -86,9 +86,9 @@ export interface PriceComponent {
 }
 
 /**
-valueComponent = numerator / denominator
-value = valueComponent * 10 ^ exponent (from PriceData)
-*/
+ * valueComponent = numerator / denominator
+ * value = valueComponent * 10 ^ exponent (from PriceData)
+ */
 export interface Ema {
   valueComponent: bigint
   value: number
