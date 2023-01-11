@@ -485,37 +485,6 @@ export type PythOracle = {
       ]
     },
     {
-      name: 'resizeAccount'
-      discriminant: { value: [2, 0, 0, 0, 14, 0, 0, 0] }
-      accounts: [
-        {
-          name: 'fundingAccount'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'priceAccount'
-          isMut: true
-          isSigner: false
-        },
-        {
-          name: 'permissionsAccount'
-          isMut: false
-          isSigner: false
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                type: 'string'
-                value: 'permissions'
-              },
-            ]
-          }
-        },
-      ]
-      args: []
-    },
-    {
       name: 'delPrice'
       discriminant: { value: [2, 0, 0, 0, 15, 0, 0, 0] }
       accounts: [
