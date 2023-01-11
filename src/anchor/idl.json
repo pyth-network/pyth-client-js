@@ -14,7 +14,21 @@
         {
           "name": "freshMappingAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -31,12 +45,26 @@
         {
           "name": "curMapping",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "nextMapping",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": true,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -53,12 +81,26 @@
         {
           "name": "tailMappingAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "productAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -75,7 +117,21 @@
         {
           "name": "productAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -92,12 +148,26 @@
         {
           "name": "productAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -123,7 +193,21 @@
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -145,7 +229,21 @@
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -253,7 +351,21 @@
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -279,7 +391,21 @@
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -350,7 +476,21 @@
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -367,12 +507,26 @@
         {
           "name": "productAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "priceAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -389,12 +543,26 @@
         {
           "name": "mappingAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "productAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
         }
       ],
       "args": []
