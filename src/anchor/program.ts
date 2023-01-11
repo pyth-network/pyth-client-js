@@ -74,7 +74,7 @@ export type PythOracle = {
         },
         {
           name: 'permissionsAccount'
-          isMut: true
+          isMut: false
           isSigner: false
           pda: {
             seeds: [
