@@ -1,6 +1,6 @@
 import { Cluster, clusterApiUrl, PublicKey } from '@solana/web3.js'
 
-export type PythCluster = Cluster | 'pythtest' | 'pythnet'
+export type PythCluster = Cluster | 'pythtest' | 'pythnet' | 'localnet'
 
 /** Mapping from solana clusters to the public key of the pyth program. */
 const clusterToPythProgramKey: Record<PythCluster, string> = {
@@ -9,6 +9,7 @@ const clusterToPythProgramKey: Record<PythCluster, string> = {
   testnet: '8tfDNiaEyrV6Q1U4DEXrEigs9DoDtkugzFbybENEbCDz',
   pythtest: '8tfDNiaEyrV6Q1U4DEXrEigs9DoDtkugzFbybENEbCDz',
   pythnet: 'FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH',
+  localnet: 'gMYYig2utAxVoXnM9UhtTWrt8e7x2SVBZqsWZJeT5Gw',
 }
 
 /** Gets the public key of the Pyth program running on the given cluster. */
@@ -31,6 +32,8 @@ export function getPythClusterApiUrl(cluster: PythCluster): string {
     return 'https://api.pythtest.pyth.network'
   } else if (cluster === 'pythnet') {
     return 'https://pythnet.rpcpool.com'
+  } else if (cluster === 'localnet') {
+    return 'http://localhost:8899'
   } else {
     return clusterApiUrl(cluster)
   }
