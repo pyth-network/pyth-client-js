@@ -34,7 +34,21 @@ export type PythOracle = {
         {
           name: 'freshMappingAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
@@ -51,12 +65,26 @@ export type PythOracle = {
         {
           name: 'curMapping'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'nextMapping'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
@@ -73,12 +101,26 @@ export type PythOracle = {
         {
           name: 'tailMappingAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'productAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
@@ -95,7 +137,21 @@ export type PythOracle = {
         {
           name: 'productAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
@@ -112,12 +168,26 @@ export type PythOracle = {
         {
           name: 'productAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: [
@@ -143,7 +213,21 @@ export type PythOracle = {
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: [
@@ -165,7 +249,21 @@ export type PythOracle = {
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: [
@@ -273,7 +371,21 @@ export type PythOracle = {
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: [
@@ -299,7 +411,21 @@ export type PythOracle = {
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: [
@@ -359,23 +485,6 @@ export type PythOracle = {
       ]
     },
     {
-      name: 'resizeAccount'
-      discriminant: { value: [2, 0, 0, 0, 14, 0, 0, 0] }
-      accounts: [
-        {
-          name: 'fundingAccount'
-          isMut: true
-          isSigner: true
-        },
-        {
-          name: 'priceAccount'
-          isMut: true
-          isSigner: true
-        },
-      ]
-      args: []
-    },
-    {
       name: 'delPrice'
       discriminant: { value: [2, 0, 0, 0, 15, 0, 0, 0] }
       accounts: [
@@ -387,12 +496,26 @@ export type PythOracle = {
         {
           name: 'productAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'priceAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
@@ -409,12 +532,26 @@ export type PythOracle = {
         {
           name: 'mappingAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
         },
         {
           name: 'productAccount'
           isMut: true
-          isSigner: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
         },
       ]
       args: []
