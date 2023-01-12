@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.10.0
+
+- Add `localnet` to `PythCluster`
+- Add `Permission` to `AccountType` 
+- Fix error in idl and make it support `permissionsAccount`
+
 ## 2.9.0
 - Add Anchor client
 ## 2.8.0
