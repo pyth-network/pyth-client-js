@@ -44,7 +44,11 @@ test('Anchor', (done) => {
 
   pythOracle.methods
     .addPrice(1, 1)
-    .accounts({ fundingAccount: PublicKey.unique(), productAccount: PublicKey.unique(), priceAccount: PublicKey.unique() })
+    .accounts({
+      fundingAccount: PublicKey.unique(),
+      productAccount: PublicKey.unique(),
+      priceAccount: PublicKey.unique(),
+    })
     .instruction()
     .then((instruction) => {
       expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]))
