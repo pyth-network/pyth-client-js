@@ -56,16 +56,11 @@ export interface MappingData extends Base {
 }
 
 export interface Product {
-  symbol: string
-  asset_type: string
-  quote_currency: string
-  tenor: string
-  price_account: string
   [index: string]: string
 }
 
 export interface ProductData extends Base {
-  priceAccountKey: PublicKey
+  priceAccountKey: PublicKey | null
   product: Product
 }
 
@@ -203,9 +198,9 @@ export const parseProductData = (data: Buffer): ProductData => {
   const size = data.readUInt32LE(12)
   // first price account in list
   const priceAccountBytes = data.slice(16, 48)
-  const priceAccountKey = new PublicKey(priceAccountBytes)
+  const priceAccountKey = PKorNull(priceAccountBytes)
   const product = {} as Product
-  product.price_account = priceAccountKey.toBase58()
+  if (priceAccountKey) product.price_account = priceAccountKey.toBase58()
   let idx = 48
   while (idx < size) {
     const keyLength = data[idx]

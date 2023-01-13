@@ -20,7 +20,7 @@ test('Mapping', (done) => {
         return
       }
       const { product, priceAccountKey } = parseProductData(accountInfo.data)
-      connection.getAccountInfo(priceAccountKey).then((accountInfo) => {
+      connection.getAccountInfo(priceAccountKey!).then((accountInfo) => {
         if (!accountInfo) {
           done('No price accountInfo')
           return

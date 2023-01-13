@@ -46,7 +46,7 @@ export class PythConnection {
         data: productData,
       },
     }
-    if (productData.priceAccountKey.toString() !== ONES) {
+    if (productData.priceAccountKey) {
       this.priceAccountKeyToProductAccountKey[productData.priceAccountKey.toString()] = key.toString()
     }
   }
