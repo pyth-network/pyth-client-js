@@ -23,22 +23,18 @@ test('Price', (done) => {
         connection.getAccountInfo(mapping.productAccountKeys[0]).then((accountInfo) => {
           if (accountInfo && accountInfo.data) {
             const product = parseProductData(accountInfo.data)
-            if (product.priceAccountKey) {
-              connection.getAccountInfo(product.priceAccountKey).then((accountInfo) => {
-                if (accountInfo && accountInfo.data) {
-                  const price = parsePriceData(accountInfo.data)
-                  console.log(product.product.symbol)
-                  console.log(price)
-                  expect(price.magic).toBe(Magic)
-                  expect(price.version).toBe(Version)
-                  done()
-                } else {
-                  done('No price accountInfo')
-                }
-              })
-            } else {
-              done('Product account has price account')
-            }
+            connection.getAccountInfo(product.priceAccountKey!).then((accountInfo) => {
+              if (accountInfo && accountInfo.data) {
+                const price = parsePriceData(accountInfo.data)
+                console.log(product.product.symbol)
+                console.log(price)
+                expect(price.magic).toBe(Magic)
+                expect(price.version).toBe(Version)
+                done()
+              } else {
+                done('No price accountInfo')
+              }
+            })
           } else {
             done('No product accountInfo')
           }
