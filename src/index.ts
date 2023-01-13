@@ -329,19 +329,14 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   // price components - up to 32
   const priceComponents: PriceComponent[] = []
   let offset = 240
-  let shouldContinue = true
-  while (offset < data.length && shouldContinue) {
-    const publisher = PKorNull(data.slice(offset, offset + 32))
+  while (priceComponents.length < numComponentPrices) {
+    const publisher = new PublicKey(data.slice(offset, offset + 32))
     offset += 32
-    if (publisher) {
-      const componentAggregate = parsePriceInfo(data.slice(offset, offset + 32), exponent)
-      offset += 32
-      const latest = parsePriceInfo(data.slice(offset, offset + 32), exponent)
-      offset += 32
-      priceComponents.push({ publisher, aggregate: componentAggregate, latest })
-    } else {
-      shouldContinue = false
-    }
+    const componentAggregate = parsePriceInfo(data.slice(offset, offset + 32), exponent)
+    offset += 32
+    const latest = parsePriceInfo(data.slice(offset, offset + 32), exponent)
+    offset += 32
+    priceComponents.push({ publisher, aggregate: componentAggregate, latest })
   }
 
   return {

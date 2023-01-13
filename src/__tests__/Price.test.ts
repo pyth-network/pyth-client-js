@@ -111,5 +111,7 @@ test('Handle price getting stale', (done) => {
   expect(stalePrice.price).toBeUndefined()
   expect(stalePrice.confidence).toBeUndefined()
 
+  expect(price.numComponentPrices).toBe(price.priceComponents.length)
+
   done()
 })
