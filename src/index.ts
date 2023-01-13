@@ -80,7 +80,7 @@ export interface Price {
 }
 
 export interface PriceComponent {
-  publisher: PublicKey | null
+  publisher: PublicKey
   aggregate: Price
   latest: Price
 }
