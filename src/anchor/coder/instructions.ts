@@ -87,7 +87,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       throw new Error(`Unknown method: ${methodName}`)
     }
 
-    /// updProduct has it's own format
+    /// updProduct has its own format
     if (methodName === 'updProduct') {
       let offset = 0
       for (const key of Object.keys(ix.productMetadata)) {
@@ -134,7 +134,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       return null
     }
 
-    /// updProduct has it's own format
+    /// updProduct has its own format
     if (decoder.name === 'updProduct') {
       const product: Product = {}
       let idx = 0
