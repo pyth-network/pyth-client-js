@@ -11,6 +11,7 @@ import { PublicKey } from '@solana/web3.js'
 import { Idl, IdlField, IdlType, IdlAccountItem } from '@coral-xyz/anchor/dist/cjs/idl'
 import { IdlCoder } from './idl'
 import { InstructionCoder } from '@coral-xyz/anchor'
+import { Product } from '../..'
 
 export type PythIdlInstruction = {
   name: string
@@ -79,14 +80,32 @@ export class PythOracleInstructionCoder implements InstructionCoder {
   public encode(ixName: string, ix: any): Buffer {
     const buffer = Buffer.alloc(1000) // TODO: use a tighter buffer.
     const methodName = camelCase(ixName)
+
     const layout = this.ixLayout.get(methodName)
     const discriminator = this.ixDiscriminator.get(methodName)
     if (!layout || !discriminator) {
       throw new Error(`Unknown method: ${methodName}`)
     }
-    const len = layout.encode(ix, buffer)
-    const data = buffer.subarray(0, len)
-    return Buffer.concat([discriminator, data])
+
+    /// updProduct has its own format
+    if (methodName === 'updProduct') {
+      let offset = 0
+      for (const key of Object.keys(ix.productMetadata)) {
+        offset += buffer.subarray(offset).writeInt8(key.length)
+        offset += buffer.subarray(offset).write(key)
+        offset += buffer.subarray(offset).writeInt8(ix.productMetadata[key].length)
+        offset += buffer.subarray(offset).write(ix.productMetadata[key])
+      }
+      if (offset > 464) {
+        throw new Error('The metadata is too long')
+      }
+      const data = buffer.subarray(0, offset)
+      return Buffer.concat([discriminator, data])
+    } else {
+      const len = layout.encode(ix, buffer)
+      const data = buffer.subarray(0, len)
+      return Buffer.concat([discriminator, data])
+    }
   }
 
   private static parseIxLayout(idl: Idl): Map<string, Layout> {
@@ -114,9 +133,33 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     if (!decoder) {
       return null
     }
-    return {
-      data: decoder.layout.decode(data),
-      name: decoder.name,
+
+    /// updProduct has its own format
+    if (decoder.name === 'updProduct') {
+      const product: Product = {}
+      let idx = 0
+      while (idx < data.length) {
+        const keyLength = data[idx]
+        idx++
+        if (keyLength) {
+          const key = data.slice(idx, idx + keyLength).toString()
+          idx += keyLength
+          const valueLength = data[idx]
+          idx++
+          const value = data.slice(idx, idx + valueLength).toString()
+          idx += valueLength
+          product[key] = value
+        }
+      }
+      return {
+        data: product,
+        name: decoder.name,
+      }
+    } else {
+      return {
+        data: decoder.layout.decode(data),
+        name: decoder.name,
+      }
     }
   }
 }
