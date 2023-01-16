@@ -23,7 +23,7 @@ test('Price', (done) => {
         connection.getAccountInfo(mapping.productAccountKeys[0]).then((accountInfo) => {
           if (accountInfo && accountInfo.data) {
             const product = parseProductData(accountInfo.data)
-            connection.getAccountInfo(product.priceAccountKey).then((accountInfo) => {
+            connection.getAccountInfo(product.priceAccountKey!).then((accountInfo) => {
               if (accountInfo && accountInfo.data) {
                 const price = parsePriceData(accountInfo.data)
                 console.log(product.product.symbol)
