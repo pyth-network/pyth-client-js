@@ -32,14 +32,18 @@ test('Anchor', (done) => {
       expect(decoded?.data).toStrictEqual({})
     })
   pythOracle.methods
-    .updProduct()
+    .updProduct({ asset_type: 'Crypto', base: 'BTC', description : "BTC/USD", quote_currency :"USD", symbol : "Crypto.BTC/USD", generic_symbol : "BTCUSD"  })
     .accounts({ fundingAccount: PublicKey.unique(), productAccount: PublicKey.unique() })
     .instruction()
     .then((instruction) => {
-      expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 3, 0, 0, 0]))
       const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updProduct')
-      expect(decoded?.data).toStrictEqual({})
+      expect(decoded?.data.asset_type).toBe("Crypto")
+      expect(decoded?.data.base).toBe("BTC")
+      expect(decoded?.data.description).toBe("BTC/USD")
+      expect(decoded?.data.quote_currency).toBe("USD")
+      expect(decoded?.data.symbol).toBe("Crypto.BTC/USD")
+      expect(decoded?.data.generic_symbol).toBe("BTCUSD")
     })
 
   pythOracle.methods

@@ -154,7 +154,14 @@ export type PythOracle = {
           }
         },
       ]
-      args: []
+      args: [
+        {
+          name: 'productMetadata'
+          type: {
+            defined: 'ProductMetadata'
+          }
+        },
+      ]
     },
     {
       name: 'addPrice'
@@ -604,6 +611,15 @@ export type PythOracle = {
           type: 'publicKey'
         },
       ]
+    },
+  ]
+  types: [
+    {
+      name: 'ProductMetadata'
+      type: {
+        kind: 'struct'
+        fields: []
+      }
     },
   ]
 }

@@ -134,7 +134,14 @@
           }
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "productMetadata",
+          "type": {
+            "defined": "ProductMetadata"
+          }
+        }
+      ]
     },
     {
       "name": "addPrice",
@@ -584,6 +591,15 @@
           "type": "publicKey"
         }
       ]
+    }
+  ],
+  "types": [
+    {
+      "name": "ProductMetadata",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
     }
   ]
 }
