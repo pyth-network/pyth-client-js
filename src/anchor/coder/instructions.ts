@@ -88,9 +88,9 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     }
 
     /// updProduct has it's own format
-    if (methodName == 'updProduct') {
+    if (methodName === 'updProduct') {
       let offset = 0
-      for (let key of Object.keys(ix.productMetadata)) {
+      for (const key of Object.keys(ix.productMetadata)) {
         offset += buffer.subarray(offset).writeInt8(key.length)
         offset += buffer.subarray(offset).write(key)
         offset += buffer.subarray(offset).writeInt8(ix.productMetadata[key].length)
@@ -135,7 +135,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     }
 
     /// updProduct has it's own format
-    if (decoder.name == 'updProduct') {
+    if (decoder.name === 'updProduct') {
       const product: Product = {}
       let idx = 0
       while (idx < data.length) {
