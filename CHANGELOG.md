@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.11.0
+
+- Add `@coral-xyz/anchor` to deps
+- ``ProductData.priceAccountKey` was `PublicKey` becomes `PublicKey | null` if the product account doesn't yet have a price account
+
 ## 2.10.0
 
 - Add `localnet` to `PythCluster`
