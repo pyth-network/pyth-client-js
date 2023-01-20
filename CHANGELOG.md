@@ -4,6 +4,7 @@
 
 - Add `@coral-xyz/anchor` to deps
 - ``ProductData.priceAccountKey` was `PublicKey` becomes `PublicKey | null` if the product account doesn't yet have a price account
+- Anchor client now support `updProduct`
 
 ## 2.10.0
 
