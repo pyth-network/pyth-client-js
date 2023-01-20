@@ -32,18 +32,25 @@ test('Anchor', (done) => {
       expect(decoded?.data).toStrictEqual({})
     })
   pythOracle.methods
-    .updProduct({ asset_type: 'Crypto', base: 'BTC', description : "BTC/USD", quote_currency :"USD", symbol : "Crypto.BTC/USD", generic_symbol : "BTCUSD"  })
+    .updProduct({
+      asset_type: 'Crypto',
+      base: 'BTC',
+      description: 'BTC/USD',
+      quote_currency: 'USD',
+      symbol: 'Crypto.BTC/USD',
+      generic_symbol: 'BTCUSD',
+    })
     .accounts({ fundingAccount: PublicKey.unique(), productAccount: PublicKey.unique() })
     .instruction()
     .then((instruction) => {
       const decoded = pythOracleCoder().instruction.decode(instruction.data)
       expect(decoded?.name).toBe('updProduct')
-      expect(decoded?.data.asset_type).toBe("Crypto")
-      expect(decoded?.data.base).toBe("BTC")
-      expect(decoded?.data.description).toBe("BTC/USD")
-      expect(decoded?.data.quote_currency).toBe("USD")
-      expect(decoded?.data.symbol).toBe("Crypto.BTC/USD")
-      expect(decoded?.data.generic_symbol).toBe("BTCUSD")
+      expect(decoded?.data.asset_type).toBe('Crypto')
+      expect(decoded?.data.base).toBe('BTC')
+      expect(decoded?.data.description).toBe('BTC/USD')
+      expect(decoded?.data.quote_currency).toBe('USD')
+      expect(decoded?.data.symbol).toBe('Crypto.BTC/USD')
+      expect(decoded?.data.generic_symbol).toBe('BTCUSD')
     })
 
   pythOracle.methods
