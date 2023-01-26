@@ -128,5 +128,3 @@ test('Handle ignored quote', (done) => {
 
   done()
 })
-
-
