@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.12.0
+
+- Add `PriceStatus.Ignored`
+
 ## 2.11.0
 
 - Add `@coral-xyz/anchor` to deps
