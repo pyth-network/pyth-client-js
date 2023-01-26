@@ -15,6 +15,7 @@ export enum PriceStatus {
   Trading,
   Halted,
   Auction,
+  Ignored
 }
 
 export enum CorpAction {
