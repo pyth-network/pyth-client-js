@@ -131,6 +131,11 @@ export class PythHttpClient {
       if (!accInfo) {
         throw new Error('Could not get account info for account ' + priceAccounts[i].toBase58())
       }
+      
+      const baseData = parseBaseData(accInfo.data)
+      if (baseData === undefined || baseData.type !== AccountType.Price) {
+        throw new Error('Account ' + priceAccounts[i].toBase58() + ' is not a price account')
+      }
 
       const priceData = parsePriceData(accInfo.data, currentSlot)
       priceDatas.push(priceData)
