@@ -114,4 +114,28 @@ export class PythHttpClient {
 
     return result
   }
+
+  /**
+   * Get the price state for an array of specified price accounts.
+   * The result is the price state for the given assets if they exist, throws if at least one account does not exist.
+   */
+  public async getAssetPricesFromAccounts(priceAccounts: PublicKey[]): Promise<PriceData[]> {
+    const priceDatas: PriceData[] = []
+    const currentSlotPromise = this.connection.getSlot(this.commitment)
+    const accountInfos = await this.connection.getMultipleAccountsInfo(priceAccounts, this.commitment)
+
+    const currentSlot = await currentSlotPromise
+    for (let i = 0; i < priceAccounts.length; i++) {
+      // Declare local variable to silence typescript warning; otherwise it thinks accountInfos[i] can be undefined
+      const accInfo = accountInfos[i]
+      if (!accInfo) {
+        throw new Error('Could not get account info for account ' + priceAccounts[i].toBase58())
+      }
+
+      const priceData = parsePriceData(accInfo.data, currentSlot)
+      priceDatas.push(priceData)
+    }
+
+    return priceDatas
+  }
 }
