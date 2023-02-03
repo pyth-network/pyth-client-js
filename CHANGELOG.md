@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.13.1
+
+- Export `PythCluster` and `getPythClusterApiUrl` globally
+
 ## 2.13.0
 
 - Add method to fetch individual prices specified by user
