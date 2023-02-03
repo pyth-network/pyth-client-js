@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.13.0
+
+- Add method to fetch individual prices specified by user
+
 ## 2.12.0
 
 - Add `PriceStatus.Ignored`
