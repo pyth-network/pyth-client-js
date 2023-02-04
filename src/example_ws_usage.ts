@@ -1,7 +1,6 @@
 import { Connection } from '@solana/web3.js'
 import { PythConnection } from './PythConnection'
-import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster } from './cluster'
-import { PriceStatus } from '.'
+import { getPythClusterApiUrl, getPythProgramKeyForCluster, PythCluster, PriceStatus } from '.'
 
 const PYTHNET_CLUSTER_NAME: PythCluster = 'pythnet'
 const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME))
