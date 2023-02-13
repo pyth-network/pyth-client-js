@@ -9,7 +9,7 @@ const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME)
 // This example shows Crypto.SOL/USD
 const feeds = [new PublicKey('H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG')]
 
-const pythConnection = new PythConnection(connection, pythPublicKey, "confirmed", feeds)
+const pythConnection = new PythConnection(connection, pythPublicKey, 'confirmed', feeds)
 pythConnection.onPriceChangeVerbose((productAccount, priceAccount) => {
   // The arguments to the callback include solana account information / the update slot if you need it.
   const product = productAccount.accountInfo.data.product

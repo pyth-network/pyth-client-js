@@ -1,6 +1,6 @@
 {
   "name": "@pythnetwork/client",
-  "version": "2.14.0",
+  "version": "2.15.0",
   "description": "Client for consuming Pyth price data",
   "homepage": "https://pyth.network",
   "main": "lib/index.js",

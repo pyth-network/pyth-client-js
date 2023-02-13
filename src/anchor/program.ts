@@ -123,7 +123,14 @@ export type PythOracle = {
           }
         },
       ]
-      args: []
+      args: [
+        {
+          name: 'productMetadata'
+          type: {
+            defined: 'ProductMetadata'
+          }
+        },
+      ]
     },
     {
       name: 'updProduct'

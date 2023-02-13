@@ -105,7 +105,12 @@ export class PythConnection {
   /** Create a PythConnection that reads its data from an underlying solana web3 connection.
    *  pythProgramKey is the public key of the Pyth program running on the chosen solana cluster.
    */
-  constructor(connection: Connection, pythProgramKey: PublicKey, commitment: Commitment = 'finalized', feedIds?: PublicKey[]) {
+  constructor(
+    connection: Connection,
+    pythProgramKey: PublicKey,
+    commitment: Commitment = 'finalized',
+    feedIds?: PublicKey[],
+  ) {
     this.connection = connection
     this.pythProgramKey = pythProgramKey
     this.commitment = commitment
@@ -124,21 +129,20 @@ export class PythConnection {
       this.handleAccount(account.pubkey, account.account, true, currentSlot)
     }
 
-    if(this.feedIds) {
+    if (this.feedIds) {
       // Filter down to only the feeds we want
       const rawIDs = this.feedIds.map((feed) => feed.toString())
       accounts = accounts.filter((feed) => rawIDs.includes(feed.pubkey.toString()))
-      for (const account of accounts){
+      for (const account of accounts) {
         this.connection.onAccountChange(
-        account.pubkey,
+          account.pubkey,
 
-        (accountInfo, context) => {
-          this.handleAccount(account.pubkey, accountInfo, false, context.slot)
-        },
-        this.commitment,
-          )
+          (accountInfo, context) => {
+            this.handleAccount(account.pubkey, accountInfo, false, context.slot)
+          },
+          this.commitment,
+        )
       }
-
     } else {
       this.connection.onProgramAccountChange(
         this.pythProgramKey,
