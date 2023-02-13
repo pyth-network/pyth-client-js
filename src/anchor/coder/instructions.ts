@@ -13,6 +13,8 @@ import { IdlCoder } from './idl'
 import { InstructionCoder } from '@coral-xyz/anchor'
 import { Product } from '../..'
 
+const MAX_METADATA_SIZE: number = 464
+
 export type PythIdlInstruction = {
   name: string
   docs?: string[]
@@ -88,7 +90,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     }
 
     /// updProduct has its own format
-    if (methodName === 'updProduct') {
+    if (methodName === 'updProduct' || methodName === 'addProduct') {
       let offset = 0
       for (const key of Object.keys(ix.productMetadata)) {
         offset += buffer.subarray(offset).writeInt8(key.length)
@@ -96,10 +98,10 @@ export class PythOracleInstructionCoder implements InstructionCoder {
         offset += buffer.subarray(offset).writeInt8(ix.productMetadata[key].length)
         offset += buffer.subarray(offset).write(ix.productMetadata[key])
       }
-      if (offset > 464) {
+      if (offset > MAX_METADATA_SIZE) {
         throw new Error('The metadata is too long')
       }
-      const data = buffer.subarray(0, offset)
+      const data = buffer.subarray(0, MAX_METADATA_SIZE)
       return Buffer.concat([discriminator, data])
     } else {
       const len = layout.encode(ix, buffer)
@@ -135,7 +137,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     }
 
     /// updProduct has its own format
-    if (decoder.name === 'updProduct') {
+    if (decoder.name === 'updProduct' || decoder.name === 'addProduct') {
       const product: Product = {}
       let idx = 0
       while (idx < data.length) {

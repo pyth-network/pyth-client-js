@@ -32,6 +32,28 @@ test('Anchor', (done) => {
       expect(decoded?.data).toStrictEqual({})
     })
   pythOracle.methods
+    .addProduct({
+      asset_type: 'Crypto',
+      base: 'ETH',
+      description: 'ETH/USD',
+      quote_currency: 'USD',
+      symbol: 'Crypto.ETH/USD',
+      generic_symbol: 'ETHUSD',
+    })
+    .accounts({ fundingAccount: PublicKey.unique(), productAccount: PublicKey.unique(), tailMappingAccount: PublicKey.unique() })
+    .instruction()
+    .then((instruction) => {
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.name).toBe('addProduct')
+      expect(decoded?.data.asset_type).toBe('Crypto')
+      expect(decoded?.data.base).toBe('ETH')
+      expect(decoded?.data.description).toBe('ETH/USD')
+      expect(decoded?.data.quote_currency).toBe('USD')
+      expect(decoded?.data.symbol).toBe('Crypto.ETH/USD')
+      expect(decoded?.data.generic_symbol).toBe('ETHUSD')
+    })
+
+  pythOracle.methods
     .updProduct({
       asset_type: 'Crypto',
       base: 'BTC',
