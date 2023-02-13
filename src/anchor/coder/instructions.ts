@@ -89,7 +89,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       throw new Error(`Unknown method: ${methodName}`)
     }
 
-    /// updProduct has its own format
+    /// updProduct and addProduct have their own format
     if (methodName === 'updProduct' || methodName === 'addProduct') {
       let offset = 0
       for (const key of Object.keys(ix.productMetadata)) {
@@ -101,7 +101,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       if (offset > MAX_METADATA_SIZE) {
         throw new Error('The metadata is too long')
       }
-      const data = buffer.subarray(0, MAX_METADATA_SIZE)
+      const data = buffer.subarray(0, offset)
       return Buffer.concat([discriminator, data])
     } else {
       const len = layout.encode(ix, buffer)
@@ -136,7 +136,7 @@ export class PythOracleInstructionCoder implements InstructionCoder {
       return null
     }
 
-    /// updProduct has its own format
+    /// updProduct and addProduct have their own format
     if (decoder.name === 'updProduct' || decoder.name === 'addProduct') {
       const product: Product = {}
       let idx = 0
