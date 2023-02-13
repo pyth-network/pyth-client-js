@@ -40,7 +40,11 @@ test('Anchor', (done) => {
       symbol: 'Crypto.ETH/USD',
       generic_symbol: 'ETHUSD',
     })
-    .accounts({ fundingAccount: PublicKey.unique(), productAccount: PublicKey.unique(), tailMappingAccount: PublicKey.unique() })
+    .accounts({
+      fundingAccount: PublicKey.unique(),
+      productAccount: PublicKey.unique(),
+      tailMappingAccount: PublicKey.unique(),
+    })
     .instruction()
     .then((instruction) => {
       const decoded = pythOracleCoder().instruction.decode(instruction.data)
