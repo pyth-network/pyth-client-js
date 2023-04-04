@@ -35,8 +35,8 @@
 
 ## 2.7.2
 ### Changed
-- Added pythtest program key and cluster url
-- Updated examples to work with pythtest
+- Added pythtest-conformance program key and cluster url
+- Updated examples to work with pythtest-conformance
 
 ## 2.7.1
   Moved solana/web3 to peerDependencies 
