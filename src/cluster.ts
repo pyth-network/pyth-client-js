@@ -1,11 +1,12 @@
 import { Cluster, clusterApiUrl, PublicKey } from '@solana/web3.js'
 
-export type PythCluster = Cluster | 'pythtest' | 'pythnet' | 'localnet'
+export type PythCluster = Cluster | 'pythtest' | 'pythnet' | 'localnet' | 'xc-devnet'
 
 /** Mapping from solana clusters to the public key of the pyth program. */
 const clusterToPythProgramKey: Record<PythCluster, string> = {
   'mainnet-beta': 'FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH',
   devnet: 'gSbePebfvPy7tRqimPoVecS2UsBvYv46ynrzWocc92s',
+  'xc-devnet' : `gSbePebfvPy7tRqimPoVecS2UsBvYv46ynrzWocc92s`,
   testnet: '8tfDNiaEyrV6Q1U4DEXrEigs9DoDtkugzFbybENEbCDz',
   pythtest: '8tfDNiaEyrV6Q1U4DEXrEigs9DoDtkugzFbybENEbCDz',
   pythnet: 'FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH',
@@ -28,9 +29,10 @@ export function getPythProgramKeyForCluster(cluster: PythCluster): PublicKey {
 /** Retrieves the RPC API URL for the specified Pyth cluster  */
 export function getPythClusterApiUrl(cluster: PythCluster): string {
   // TODO: Add pythnet when it's ready
-  if (cluster === 'pythtest') {
+  if ((cluster === 'pythtest') || (cluster === 'xc-devnet')) {
     return 'https://api.pythtest.pyth.network'
-  } else if (cluster === 'pythnet') {
+  }
+   else if (cluster === 'pythnet') {
     return 'https://pythnet.rpcpool.com'
   } else if (cluster === 'localnet') {
     return 'http://localhost:8899'
