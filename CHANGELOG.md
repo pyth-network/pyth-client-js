@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.15.1
+
+- Fix import of `@coral-xyz/borsh`
+
 ## 2.13.1
 
 - Export `PythCluster` and `getPythClusterApiUrl` globally
