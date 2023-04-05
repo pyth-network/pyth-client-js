@@ -30,7 +30,7 @@ export function getPythProgramKeyForCluster(cluster: PythCluster): PublicKey {
 export function getPythClusterApiUrl(cluster: PythCluster): string {
   // TODO: Add pythnet when it's ready
   if (cluster === 'pythtest-conformance' || cluster === 'pythtest-crosschain') {
-    return 'https://api.pythtest-conformance.pyth.network'
+    return 'https://api.pythtest.pyth.network'
   } else if (cluster === 'pythnet') {
     return 'https://pythnet.rpcpool.com'
   } else if (cluster === 'localnet') {
