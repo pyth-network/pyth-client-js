@@ -374,7 +374,7 @@ export type PythOracle = {
       ]
     },
     {
-      name: 'initPrice'
+      name: 'setExponent'
       discriminant: { value: [2, 0, 0, 0, 9, 0, 0, 0] }
       accounts: [
         {
