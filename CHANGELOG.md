@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.17.0 
+
+- Rename initPrice to `setExponent` for clarity
+
+## 2.16.0
+
+- Remove `pythtest` and add `pythtest-crosschain` and `pythtest-conformance`. There are now two oracle instances.
+
 ## 2.15.1
 
 - Fix import of `@coral-xyz/borsh`
