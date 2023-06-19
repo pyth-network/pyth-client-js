@@ -121,8 +121,12 @@ export class PythConnection {
    *  each time a Pyth price account is updated.
    */
   public async start() {
-    let accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
-    const currentSlot = await this.connection.getSlot(this.commitment)
+    const accSlotProm = await Promise.all([
+      this.connection.getProgramAccounts(this.pythProgramKey, this.commitment),
+      this.connection.getSlot(this.commitment),
+    ])
+    let accounts = accSlotProm[0]
+    const currentSlot = accSlotProm[1]
     // Handle all accounts once since we need to handle product accounts
     // at least once
     for (const account of accounts) {
