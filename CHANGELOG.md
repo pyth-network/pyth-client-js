@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.18.0
+
+- Optimize Solana RPC calls
+
 ## 2.17.0 
 
 - Rename initPrice to `setExponent` for clarity
