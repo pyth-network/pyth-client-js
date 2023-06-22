@@ -394,5 +394,5 @@ export const parsePermissionData = (data: Buffer): PermissionData => {
 
 export { PythConnection } from './PythConnection'
 export { PythHttpClient } from './PythHttpClient'
-export { getPythProgramKeyForCluster } from './cluster'
+export { getPythProgramKeyForCluster, PythCluster, getPythClusterApiUrl } from './cluster'
 export { pythOracleProgram, pythOracleCoder, pythIdl } from './anchor'

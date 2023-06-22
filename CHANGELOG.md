@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.18.0
+
+- Optimize Solana RPC calls
+
+## 2.17.0 
+
+- Rename initPrice to `setExponent` for clarity
+
+## 2.16.0
+
+- Remove `pythtest` and add `pythtest-crosschain` and `pythtest-conformance`. There are now two oracle instances.
+
+## 2.15.1
+
+- Fix import of `@coral-xyz/borsh`
+
+## 2.13.1
+
+- Export `PythCluster` and `getPythClusterApiUrl` globally
+
+## 2.13.0
+
+- Add method to fetch individual prices specified by user
+
 ## 2.12.0
 
 - Add `PriceStatus.Ignored`
@@ -23,8 +47,8 @@
 
 ## 2.7.2
 ### Changed
-- Added pythtest program key and cluster url
-- Updated examples to work with pythtest
+- Added pythtest-conformance program key and cluster url
+- Updated examples to work with pythtest-conformance
 
 ## 2.7.1
   Moved solana/web3 to peerDependencies 

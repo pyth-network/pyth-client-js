@@ -103,7 +103,14 @@
           }
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "productMetadata",
+          "type": {
+            "defined": "ProductMetadata"
+          }
+        }
+      ]
     },
     {
       "name": "updProduct",
@@ -347,7 +354,7 @@
       ]
     },
     {
-      "name": "initPrice",
+      "name": "setExponent",
       "discriminant": { "value": [2, 0, 0, 0, 9, 0, 0, 0] },
       "accounts": [
         {

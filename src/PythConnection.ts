@@ -30,6 +30,7 @@ export class PythConnection {
   connection: Connection
   pythProgramKey: PublicKey
   commitment: Commitment
+  feedIds?: PublicKey[]
 
   productAccountKeyToProduct: Record<string, AccountUpdate<ProductData>> = {}
   priceAccountKeyToProductAccountKey: Record<string, string> = {}
@@ -104,29 +105,57 @@ export class PythConnection {
   /** Create a PythConnection that reads its data from an underlying solana web3 connection.
    *  pythProgramKey is the public key of the Pyth program running on the chosen solana cluster.
    */
-  constructor(connection: Connection, pythProgramKey: PublicKey, commitment: Commitment = 'finalized') {
+  constructor(
+    connection: Connection,
+    pythProgramKey: PublicKey,
+    commitment: Commitment = 'finalized',
+    feedIds?: PublicKey[],
+  ) {
     this.connection = connection
     this.pythProgramKey = pythProgramKey
     this.commitment = commitment
+    this.feedIds = feedIds
   }
 
   /** Start receiving price updates. Once this method is called, any registered callbacks will be invoked
    *  each time a Pyth price account is updated.
    */
   public async start() {
-    const accounts = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
-    const currentSlot = await this.connection.getSlot(this.commitment)
+    const accSlotProm = await Promise.all([
+      this.connection.getProgramAccounts(this.pythProgramKey, this.commitment),
+      this.connection.getSlot(this.commitment),
+    ])
+    let accounts = accSlotProm[0]
+    const currentSlot = accSlotProm[1]
+    // Handle all accounts once since we need to handle product accounts
+    // at least once
     for (const account of accounts) {
       this.handleAccount(account.pubkey, account.account, true, currentSlot)
     }
 
-    this.connection.onProgramAccountChange(
-      this.pythProgramKey,
-      (keyedAccountInfo, context) => {
-        this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false, context.slot)
-      },
-      this.commitment,
-    )
+    if (this.feedIds) {
+      // Filter down to only the feeds we want
+      const rawIDs = this.feedIds.map((feed) => feed.toString())
+      accounts = accounts.filter((feed) => rawIDs.includes(feed.pubkey.toString()))
+      for (const account of accounts) {
+        this.connection.onAccountChange(
+          account.pubkey,
+
+          (accountInfo, context) => {
+            this.handleAccount(account.pubkey, accountInfo, false, context.slot)
+          },
+          this.commitment,
+        )
+      }
+    } else {
+      this.connection.onProgramAccountChange(
+        this.pythProgramKey,
+        (keyedAccountInfo, context) => {
+          this.handleAccount(keyedAccountInfo.accountId, keyedAccountInfo.accountInfo, false, context.slot)
+        },
+        this.commitment,
+      )
+    }
   }
 
   /** Register callback to receive price updates. */

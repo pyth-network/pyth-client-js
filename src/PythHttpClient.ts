@@ -51,12 +51,14 @@ export class PythHttpClient {
     const prices = new Array<PriceData>()
 
     // Retrieve data from blockchain
-    const accountList = await this.connection.getProgramAccounts(this.pythProgramKey, this.commitment)
+    const [accountList, currentSlot] = await Promise.all([
+      this.connection.getProgramAccounts(this.pythProgramKey, this.commitment),
+      this.connection.getSlot(this.commitment),
+    ])
 
     // Populate products and prices
     const priceDataQueue = new Array<PriceData>()
     const productAccountKeyToProduct = new Map<string, Product>()
-    const currentSlot = await this.connection.getSlot(this.commitment)
 
     // Initialize permission field as undefined
     let permissionData
@@ -121,17 +123,19 @@ export class PythHttpClient {
    */
   public async getAssetPricesFromAccounts(priceAccounts: PublicKey[]): Promise<PriceData[]> {
     const priceDatas: PriceData[] = []
-    const currentSlotPromise = this.connection.getSlot(this.commitment)
-    const accountInfos = await this.connection.getMultipleAccountsInfo(priceAccounts, this.commitment)
 
-    const currentSlot = await currentSlotPromise
+    const [accountInfos, currentSlot] = await Promise.all([
+      this.connection.getMultipleAccountsInfo(priceAccounts, this.commitment),
+      this.connection.getSlot(this.commitment),
+    ])
+
     for (let i = 0; i < priceAccounts.length; i++) {
       // Declare local variable to silence typescript warning; otherwise it thinks accountInfos[i] can be undefined
       const accInfo = accountInfos[i]
       if (!accInfo) {
         throw new Error('Could not get account info for account ' + priceAccounts[i].toBase58())
       }
-      
+
       const baseData = parseBaseData(accInfo.data)
       if (baseData === undefined || baseData.type !== AccountType.Price) {
         throw new Error('Account ' + priceAccounts[i].toBase58() + ' is not a price account')

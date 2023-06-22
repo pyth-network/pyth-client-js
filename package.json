@@ -1,6 +1,6 @@
 {
   "name": "@pythnetwork/client",
-  "version": "2.12.0",
+  "version": "2.18.0",
   "description": "Client for consuming Pyth price data",
   "homepage": "https://pyth.network",
   "main": "lib/index.js",
@@ -20,6 +20,7 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
     "ws_example": "npm run build && node lib/example_ws_usage.js",
+    "ws_single_example": "npm run build && node lib/example_ws_usage.js",
     "http_example": "npm run build && node lib/example_http_usage.js"
   },
   "keywords": [
@@ -43,7 +44,8 @@
   },
   "dependencies": {
     "buffer": "^6.0.1",
-    "@coral-xyz/anchor": "^0.28.1-beta.1"
+    "@coral-xyz/anchor": "^0.28.1-beta.1",
+    "@coral-xyz/borsh": "^0.26.0"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.30.2"
