@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "buffer": "^6.0.1",
-    "@coral-xyz/anchor": "^0.26.0"
+    "@coral-xyz/anchor": "^0.28.1-beta.1"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.30.2"
