@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.0
+
+- Upgrade `@coral-xyz/anchor` to `^0.28.1-beta.1`
+- Upgrade `@coral-xyz/borsh` to `^0.28.0`
+
 ## 2.18.0
 
 - Optimize Solana RPC calls
