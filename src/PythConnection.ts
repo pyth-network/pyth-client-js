@@ -102,7 +102,7 @@ export class PythConnection {
         }
       }
     } catch (error: any) {
-      console.error(`Failed to parse account with key ${key.toString()}: ${error.message}`)
+      throw new Error(`Failed to parse account with key ${key.toString()}: ${error.message}`)
     }
   }
 
