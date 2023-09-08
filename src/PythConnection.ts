@@ -1,5 +1,5 @@
-import { Connection, PublicKey, Commitment, AccountInfo } from '@solana/web3.js'
-import { parseBaseData, parsePriceData, parseProductData, PriceData, Product, ProductData, AccountType } from './index'
+import { AccountInfo, Commitment, Connection, PublicKey } from '@solana/web3.js'
+import { AccountType, PriceData, Product, ProductData, parseBaseData, parsePriceData, parseProductData } from './index'
 
 const ONES = '11111111111111111111111111111111'
 
@@ -78,27 +78,31 @@ export class PythConnection {
   }
 
   private handleAccount(key: PublicKey, account: AccountInfo<Buffer>, productOnly: boolean, slot: number) {
-    const base = parseBaseData(account.data)
-    // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
-    if (base) {
-      switch (base.type) {
-        case AccountType.Mapping:
-          // We can skip these because we're going to get every account owned by this program anyway.
-          break
-        case AccountType.Product:
-          this.handleProductAccount(key, account, slot)
-          break
-        case AccountType.Price:
-          if (!productOnly) {
-            this.handlePriceAccount(key, account, slot)
-          }
-          break
-        case AccountType.Test:
-        case AccountType.Permission:
-          break
-        default:
-          throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
+    try {
+      const base = parseBaseData(account.data)
+      // The pyth program owns accounts that don't contain pyth data, which we can safely ignore.
+      if (base) {
+        switch (base.type) {
+          case AccountType.Mapping:
+            // We can skip these because we're going to get every account owned by this program anyway.
+            break
+          case AccountType.Product:
+            this.handleProductAccount(key, account, slot)
+            break
+          case AccountType.Price:
+            if (!productOnly) {
+              this.handlePriceAccount(key, account, slot)
+            }
+            break
+          case AccountType.Test:
+          case AccountType.Permission:
+            break
+          default:
+            throw new Error(`Unknown account type: ${base.type}. Try upgrading pyth-client.`)
+        }
       }
+    } catch (error: any) {
+      console.error(`Failed to parse account with key ${key.toString()}: ${error.message}`)
     }
   }
 
