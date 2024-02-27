@@ -1,5 +1,5 @@
+import { AnchorProvider, Idl, Program } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { Program, AnchorProvider, Idl } from '@coral-xyz/anchor'
 import { PythOracleCoder } from './coder'
 import IDL from './idl.json'
 
@@ -616,6 +616,48 @@ export type PythOracle = {
         {
           name: 'securityAuthority'
           type: 'publicKey'
+        },
+      ]
+    },
+    {
+      name: 'setMaxLatency'
+      discriminant: { value: [2, 0, 0, 0, 18, 0, 0, 0] }
+      accounts: [
+        {
+          name: 'fundingAccount'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'priceAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: false
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
+        },
+      ]
+      args: [
+        {
+          name: 'maxLatency'
+          type: 'u8'
+        },
+        {
+          name: 'unused'
+          type: {
+            array: ['u8', 3]
+          }
         },
       ]
     },

@@ -598,6 +598,48 @@
           "type": "publicKey"
         }
       ]
+    },
+    {
+      "name": "setMaxLatency",
+      "discriminant": { "value": [2, 0, 0, 0, 18, 0, 0, 0] },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "priceAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": false,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "maxLatency",
+          "type": "u8"
+        },
+        {
+          "name": "unused",
+          "type": {
+            "array": ["u8", 3]
+          }
+        }
+      ]
     }
   ],
   "types": [

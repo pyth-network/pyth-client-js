@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.w0.0
+## 2.20.0
 
 - Add `messageSent` field to `PriceData`
 - Add `maxLatency` field to `PriceData`
