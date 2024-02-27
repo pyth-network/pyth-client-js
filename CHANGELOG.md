@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.w0.0
+
+- Add `messageSent` field to `PriceData`
+- Add `maxLatency` field to `PriceData`
+
 ## 2.19.0
 
 - Upgrade `@coral-xyz/anchor` to `^0.28.1-beta.1`
