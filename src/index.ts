@@ -103,7 +103,8 @@ export interface PriceData extends Base {
   emaConfidence: Ema
   timestamp: bigint
   minPublishers: number
-  drv2: number
+  messageSent: number
+  maxLatency: number
   drv3: number
   drv4: number
   productAccountKey: PublicKey
@@ -285,10 +286,12 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   const timestamp = readBigInt64LE(data, 96)
   // minimum number of publishers for status to be TRADING
   const minPublishers = data.readUInt8(104)
+  // message sent flag
+  const messageSent = data.readUInt8(105)
+  // configurable max latency in slots between send and receive
+  const maxLatency = data.readUInt8(106)
   // space for future derived values
-  const drv2 = data.readInt8(105)
-  // space for future derived values
-  const drv3 = data.readInt16LE(106)
+  const drv3 = data.readInt8(107)
   // space for future derived values
   const drv4 = data.readInt32LE(108)
   // product id / reference account
@@ -350,7 +353,8 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     emaConfidence,
     timestamp,
     minPublishers,
-    drv2,
+    messageSent,
+    maxLatency,
     drv3,
     drv4,
     productAccountKey,
@@ -394,5 +398,5 @@ export const parsePermissionData = (data: Buffer): PermissionData => {
 
 export { PythConnection } from './PythConnection'
 export { PythHttpClient } from './PythHttpClient'
-export { getPythProgramKeyForCluster, PythCluster, getPythClusterApiUrl } from './cluster'
-export { pythOracleProgram, pythOracleCoder, pythIdl } from './anchor'
+export { pythIdl, pythOracleCoder, pythOracleProgram } from './anchor'
+export { PythCluster, getPythClusterApiUrl, getPythProgramKeyForCluster } from './cluster'
