@@ -1,4 +1,4 @@
-import { AccountsCoder, ACCOUNT_DISCRIMINATOR_SIZE, Idl } from '@coral-xyz/anchor'
+import { AccountsCoder, Idl } from '@coral-xyz/anchor'
 import { IdlTypeDef } from '@coral-xyz/anchor/dist/cjs/idl'
 
 export class PythOracleAccountCoder<A extends string = string> implements AccountsCoder {
