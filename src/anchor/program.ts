@@ -688,7 +688,7 @@ export type PythOracle = {
               },
             ]
           }
-        }
+        },
       ]
       args: []
     },
