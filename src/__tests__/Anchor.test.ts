@@ -203,5 +203,27 @@ test('Anchor', (done) => {
       expect(decoded?.data.securityAuthority.equals(new PublicKey(8))).toBeTruthy()
     })
 
+  pythOracle.methods
+    .setMaxLatency(1, [0,0,0])
+    .accounts({ fundingAccount: PublicKey.unique(), priceAccount: PublicKey.unique() })
+    .instruction()
+    .then((instruction) => {
+      expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 18, 0, 0, 0, 1, 0, 0, 0]))
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.name).toBe('setMaxLatency')
+      expect(decoded?.data.maxLatency === 1).toBeTruthy()
+    })
+
+  pythOracle.methods
+    .initPriceFeedIndex()
+    .accounts({ fundingAccount: PublicKey.unique(), priceAccount: PublicKey.unique(), permissionsAccount: PublicKey.unique() })
+    .instruction()
+    .then((instruction) => {
+      expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 19, 0, 0, 0]))
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.name).toBe('initPriceFeedIndex')
+      expect(decoded?.data).toStrictEqual({})
+    })
+
   done()
 })
