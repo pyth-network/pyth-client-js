@@ -191,7 +191,7 @@ export type PythOracle = {
         },
         {
           name: 'permissionsAccount'
-          isMut: false
+          isMut: true
           isSigner: false
           pda: {
             seeds: [
@@ -688,12 +688,7 @@ export type PythOracle = {
               },
             ]
           }
-        },
-        {
-          name: 'systemProgram'
-          isMut: false
-          isSigner: false
-        },
+        }
       ]
       args: []
     },

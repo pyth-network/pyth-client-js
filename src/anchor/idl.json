@@ -171,7 +171,7 @@
         },
         {
           "name": "permissionsAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "pda": {
             "seeds": [
@@ -668,11 +668,6 @@
               }
             ]
           }
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": []
