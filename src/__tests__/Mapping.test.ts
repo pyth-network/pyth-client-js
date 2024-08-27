@@ -1,9 +1,9 @@
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
-import { parseMappingData, Magic, Version } from '../index'
+import { Connection, PublicKey } from '@solana/web3.js'
+import { parseMappingData, Magic, Version, getPythClusterApiUrl } from '../index'
 
 test('Mapping', (done) => {
   jest.setTimeout(60000)
-  const url = clusterApiUrl('devnet')
+  const url = getPythClusterApiUrl('pythtest-crosschain')
   const oraclePublicKey = 'BmA9Z6FjioHJPpjT39QazZyhDRUdZy2ezwx4GiDdE2u2'
   const connection = new Connection(url)
   const publicKey = new PublicKey(oraclePublicKey)

@@ -1,16 +1,17 @@
 import { AnchorProvider, Wallet } from '@coral-xyz/anchor'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { BN } from 'bn.js'
+import { getPythClusterApiUrl } from '../cluster'
 import { getPythProgramKeyForCluster, pythOracleProgram, pythOracleCoder } from '../index'
 
 test('Anchor', (done) => {
   jest.setTimeout(60000)
   const provider = new AnchorProvider(
-    new Connection('https://api.mainnet-beta.solana.com'),
+    new Connection(getPythClusterApiUrl('pythnet')),
     new Wallet(new Keypair()),
     AnchorProvider.defaultOptions(),
   )
-  const pythOracle = pythOracleProgram(getPythProgramKeyForCluster('mainnet-beta'), provider)
+  const pythOracle = pythOracleProgram(getPythProgramKeyForCluster('pythnet'), provider)
   pythOracle.methods
     .initMapping()
     .accounts({ fundingAccount: PublicKey.unique(), freshMappingAccount: PublicKey.unique() })
