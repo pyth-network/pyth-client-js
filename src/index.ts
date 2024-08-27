@@ -296,11 +296,15 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   // configurable max latency in slots between send and receive
   const maxLatency = data.readUInt8(106)
   // Various flags (used for operations)
-  const flag_bits = data.readInt8(107)
+  const flagBits = data.readInt8(107)
+
+  /* tslint:disable:no-bitwise */
   const flags = {
-    accumulatorV2: (flag_bits & (1<<0)) !== 0,
-    messageBufferCleared: (flag_bits & (1<<1)) !== 0,
+    accumulatorV2: (flagBits & (1<<0)) !== 0,
+    messageBufferCleared: (flagBits & (1<<1)) !== 0,
   }
+  /* tslint:enable:no-bitwise */
+
   // Globally immutable unique price feed index used for publishing.
   const feedIndex = data.readInt32LE(108)
   // product id / reference account
