@@ -219,7 +219,6 @@ test('Anchor', (done) => {
     .accounts({
       fundingAccount: PublicKey.unique(),
       priceAccount: PublicKey.unique(),
-      permissionsAccount: PublicKey.unique(),
     })
     .instruction()
     .then((instruction) => {
