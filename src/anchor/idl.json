@@ -640,6 +640,42 @@
           }
         }
       ]
+    },
+    {
+      "name": "initPriceFeedIndex",
+      "discriminant": { "value": [2, 0, 0, 0, 19, 0, 0, 0] },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "priceAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": true,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "types": [
