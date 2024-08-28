@@ -1,11 +1,12 @@
-import { clusterApiUrl, Connection, PublicKey, SystemProgram } from '@solana/web3.js'
+import { Connection, PublicKey, SystemProgram } from '@solana/web3.js'
 import { getPythProgramKeyForCluster, parseProductData, PythHttpClient } from '..'
+import { getPythClusterApiUrl } from '../cluster'
 
 test('PythHttpClientCall: getData', (done) => {
-  jest.setTimeout(20000)
+  jest.setTimeout(60000)
   try {
-    const programKey = getPythProgramKeyForCluster('testnet')
-    const currentConnection = new Connection(clusterApiUrl('testnet'))
+    const programKey = getPythProgramKeyForCluster('pythtest-conformance')
+    const currentConnection = new Connection(getPythClusterApiUrl('pythtest-conformance'))
     const pyth_client = new PythHttpClient(currentConnection, programKey)
     pyth_client.getData().then(
       (result) => {
@@ -30,7 +31,7 @@ test('PythHttpClientCall: getAssetPricesFromAccounts for one account', (done) =>
   const solUSDKey = new PublicKey('7VJsBtJzgTftYzEeooSDYyjKXvYRWJHdwvbwfBvTg9K')
   try {
     const programKey = getPythProgramKeyForCluster('testnet')
-    const currentConnection = new Connection(clusterApiUrl('testnet'))
+    const currentConnection = new Connection(getPythClusterApiUrl('pythtest-conformance'))
     const pyth_client = new PythHttpClient(currentConnection, programKey)
     pyth_client
       .getAssetPricesFromAccounts([solUSDKey])
@@ -66,7 +67,7 @@ test('PythHttpClientCall: getAssetPricesFromAccounts for multiple accounts', (do
 
   try {
     const programKey = getPythProgramKeyForCluster('testnet')
-    const currentConnection = new Connection(clusterApiUrl('testnet'))
+    const currentConnection = new Connection(getPythClusterApiUrl('pythtest-conformance'))
     const pyth_client = new PythHttpClient(currentConnection, programKey)
     pyth_client
       .getAssetPricesFromAccounts([solUSDKey, bonkUSDKey, usdcUSDKey])
@@ -106,7 +107,7 @@ test('PythHttpClientCall: getAssetPricesFromAccounts should throw for invalid ac
 
   try {
     const programKey = getPythProgramKeyForCluster('testnet')
-    const currentConnection = new Connection(clusterApiUrl('testnet'))
+    const currentConnection = new Connection(getPythClusterApiUrl('pythtest-conformance'))
     const pyth_client = new PythHttpClient(currentConnection, programKey)
     pyth_client
       .getAssetPricesFromAccounts([solUSDKey, systemProgram, usdcUSDKey])

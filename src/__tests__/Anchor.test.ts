@@ -1,16 +1,17 @@
 import { AnchorProvider, Wallet } from '@coral-xyz/anchor'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { BN } from 'bn.js'
+import { getPythClusterApiUrl } from '../cluster'
 import { getPythProgramKeyForCluster, pythOracleProgram, pythOracleCoder } from '../index'
 
 test('Anchor', (done) => {
   jest.setTimeout(60000)
   const provider = new AnchorProvider(
-    new Connection('https://api.mainnet-beta.solana.com'),
+    new Connection(getPythClusterApiUrl('pythnet')),
     new Wallet(new Keypair()),
     AnchorProvider.defaultOptions(),
   )
-  const pythOracle = pythOracleProgram(getPythProgramKeyForCluster('mainnet-beta'), provider)
+  const pythOracle = pythOracleProgram(getPythProgramKeyForCluster('pythnet'), provider)
   pythOracle.methods
     .initMapping()
     .accounts({ fundingAccount: PublicKey.unique(), freshMappingAccount: PublicKey.unique() })
@@ -200,6 +201,31 @@ test('Anchor', (done) => {
       expect(decoded?.data.masterAuthority.equals(new PublicKey(6))).toBeTruthy()
       expect(decoded?.data.dataCurationAuthority.equals(new PublicKey(7))).toBeTruthy()
       expect(decoded?.data.securityAuthority.equals(new PublicKey(8))).toBeTruthy()
+    })
+
+  pythOracle.methods
+    .setMaxLatency(1, [0, 0, 0])
+    .accounts({ fundingAccount: PublicKey.unique(), priceAccount: PublicKey.unique() })
+    .instruction()
+    .then((instruction) => {
+      expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 18, 0, 0, 0, 1, 0, 0, 0]))
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.name).toBe('setMaxLatency')
+      expect(decoded?.data.maxLatency === 1).toBeTruthy()
+    })
+
+  pythOracle.methods
+    .initPriceFeedIndex()
+    .accounts({
+      fundingAccount: PublicKey.unique(),
+      priceAccount: PublicKey.unique(),
+    })
+    .instruction()
+    .then((instruction) => {
+      expect(instruction.data).toStrictEqual(Buffer.from([2, 0, 0, 0, 19, 0, 0, 0]))
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.name).toBe('initPriceFeedIndex')
+      expect(decoded?.data).toStrictEqual({})
     })
 
   done()

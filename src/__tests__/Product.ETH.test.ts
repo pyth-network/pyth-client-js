@@ -1,9 +1,9 @@
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
-import { Magic, parseProductData, Version } from '../index'
+import { Connection, PublicKey } from '@solana/web3.js'
+import { getPythClusterApiUrl, Magic, parseProductData, Version } from '../index'
 
 test('Product', (done) => {
   jest.setTimeout(60000)
-  const url = clusterApiUrl('devnet')
+  const url = getPythClusterApiUrl('pythtest-crosschain')
   const ethProductKey = '2ciUuGZiee5macAMeQ7bHGTJtwcYTgnt6jdmQnnKZrfu'
   const connection = new Connection(url)
   const publicKey = new PublicKey(ethProductKey)
