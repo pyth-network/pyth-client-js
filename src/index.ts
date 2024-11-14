@@ -41,6 +41,11 @@ export enum AccountType {
   Permission,
 }
 
+export type Flags = {
+  accumulatorV2: boolean,
+  messageBufferCleared: boolean,
+}
+
 const empty32Buffer = Buffer.alloc(32)
 const PKorNull = (data: Buffer) => (data.equals(empty32Buffer) ? null : new PublicKey(data))
 
@@ -105,8 +110,8 @@ export interface PriceData extends Base {
   minPublishers: number
   messageSent: number
   maxLatency: number
-  drv3: number
-  drv4: number
+  flags: Flags,
+  feedIndex: number
   productAccountKey: PublicKey
   nextPriceAccountKey: PublicKey | null
   previousSlot: bigint
@@ -290,10 +295,18 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
   const messageSent = data.readUInt8(105)
   // configurable max latency in slots between send and receive
   const maxLatency = data.readUInt8(106)
-  // space for future derived values
-  const drv3 = data.readInt8(107)
-  // space for future derived values
-  const drv4 = data.readInt32LE(108)
+  // Various flags (used for operations)
+  const flagBits = data.readInt8(107)
+
+  /* tslint:disable:no-bitwise */
+  const flags = {
+    accumulatorV2: (flagBits & (1<<0)) !== 0,
+    messageBufferCleared: (flagBits & (1<<1)) !== 0,
+  }
+  /* tslint:enable:no-bitwise */
+
+  // Globally immutable unique price feed index used for publishing.
+  const feedIndex = data.readInt32LE(108)
   // product id / reference account
   const productAccountKey = new PublicKey(data.slice(112, 144))
   // next price account in list
@@ -355,8 +368,8 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
     minPublishers,
     messageSent,
     maxLatency,
-    drv3,
-    drv4,
+    flags,
+    feedIndex,
     productAccountKey,
     nextPriceAccountKey,
     previousSlot,

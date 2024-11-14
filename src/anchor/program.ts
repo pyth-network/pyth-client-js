@@ -19,7 +19,7 @@ export function pythOracleCoder(): PythOracleCoder {
 export { default as pythIdl } from './idl.json'
 
 export type PythOracle = {
-  version: '2.20.0'
+  version: '2.33.0'
   name: 'pyth_oracle'
   instructions: [
     {
@@ -191,7 +191,7 @@ export type PythOracle = {
         },
         {
           name: 'permissionsAccount'
-          isMut: false
+          isMut: true
           isSigner: false
           pda: {
             seeds: [
@@ -660,6 +660,37 @@ export type PythOracle = {
           }
         },
       ]
+    },
+    {
+      name: 'initPriceFeedIndex'
+      discriminant: { value: [2, 0, 0, 0, 19, 0, 0, 0] }
+      accounts: [
+        {
+          name: 'fundingAccount'
+          isMut: true
+          isSigner: true
+        },
+        {
+          name: 'priceAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'permissionsAccount'
+          isMut: true
+          isSigner: false
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                type: 'string'
+                value: 'permissions'
+              },
+            ]
+          }
+        },
+      ]
+      args: []
     },
   ]
   types: [

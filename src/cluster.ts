@@ -32,7 +32,7 @@ export function getPythClusterApiUrl(cluster: PythCluster): string {
   if (cluster === 'pythtest-conformance' || cluster === 'pythtest-crosschain') {
     return 'https://api.pythtest.pyth.network'
   } else if (cluster === 'pythnet') {
-    return 'https://pythnet.rpcpool.com'
+    return 'https://api2.pythnet.pyth.network'
   } else if (cluster === 'localnet') {
     return 'http://localhost:8899'
   } else {
