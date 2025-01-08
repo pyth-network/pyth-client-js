@@ -1,6 +1,6 @@
 # @pythnetwork/client
 
-## A library for reading on-chain Pyth oracle data
+## A library for reading Pyth accounts on Pythnet
 
 [Pyth](https://pyth.network/) is building a way to deliver a decentralized, cross-chain market of verifiable data from high-quality nodes to any smart contract, anywhere.
 
