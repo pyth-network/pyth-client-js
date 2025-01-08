@@ -6,6 +6,8 @@
 
 This library reads on-chain Pyth data from [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js) and returns JavaScript-friendly objects.
 
+> ⚠️ **Important Warning**: For most use cases, it is recommended and easier to use Pyth's off-chain API (Hermes) via the [@pythnetwork/hermes-client](https://www.npmjs.com/package/@pythnetwork/hermes-client) package to get the most up-to-date Pyth prices. The Hermes client does not require a connection to Pythnet and provides a simpler interface for price updates.
+
 ## Installation
 
 ### npm
