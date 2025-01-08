@@ -1,4 +1,4 @@
-# @pythnetwork/client
+# @pythnetwork/pythnet-client
 
 ## A library for reading on-chain Pyth oracle data
 
@@ -11,13 +11,13 @@ This library reads on-chain Pyth data from [@solana/web3.js](https://www.npmjs.c
 ### npm
 
 ```
-$ npm install --save @pythnetwork/client
+$ npm install --save @pythnetwork/pythnet-client
 ```
 
 ### Yarn
 
 ```
-$ yarn add @pythnetwork/client
+$ yarn add @pythnetwork/pythnet-client
 ```
 
 ## Example Usage
