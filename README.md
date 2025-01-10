@@ -1,10 +1,12 @@
 # @pythnetwork/client
 
-## A library for reading on-chain Pyth oracle data
+## A library for reading Pyth accounts on Pythnet
 
 [Pyth](https://pyth.network/) is building a way to deliver a decentralized, cross-chain market of verifiable data from high-quality nodes to any smart contract, anywhere.
 
-This library reads on-chain Pyth data from [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js) and returns JavaScript-friendly objects.
+This library reads Pythnet (Pyth's app-specific SVM blockchain) data using [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js) and returns JavaScript-friendly objects.
+
+> ⚠️ **Important Warning**: For most use cases, it is recommended and more user-friendly to use Pyth's off-chain API ([Hermes](https://hermes.pyth.network/docs/)) via the [@pythnetwork/hermes-client](https://www.npmjs.com/package/@pythnetwork/hermes-client) package to get the most up-to-date Pyth prices. Using `@pythnetwork/client` requires a Pythnet RPC connection and exposes many low-level details.
 
 ## Installation
 
@@ -29,7 +31,7 @@ This library lets you consume prices in two different ways: you can either get c
 The websocket connection provides a subscription model for consuming price updates:
 
 ```typescript
-const pythConnection = new PythConnection(solanaWeb3Connection, getPythProgramKeyForCluster(solanaClusterName))
+const pythConnection = new PythConnection(pythnetWeb3Connection, getPythProgramKeyForCluster(pythnetClusterName))
 pythConnection.onPriceChange((product, price) => {
   // sample output:
   // Crypto.SRM/USD: $8.68725 ±$0.0131 Status: Trading
