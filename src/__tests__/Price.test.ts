@@ -104,8 +104,8 @@ test('Handle price getting stale', (done) => {
   expect(price.magic).toBe(Magic)
   expect(price.version).toBe(Version)
   expect(price.status).toBe(PriceStatus.Trading)
-  expect(price.flags.accumulatorV2).toBe(false);
-  expect(price.flags.messageBufferCleared).toBe(false);
+  expect(price.flags.accumulatorV2).toBe(false)
+  expect(price.flags.messageBufferCleared).toBe(false)
   expect(price.feedIndex).toBe(0)
 
   expect(parsePriceData(data, price.aggregate.publishSlot + MAX_SLOT_DIFFERENCE).status).toBe(PriceStatus.Trading)
@@ -143,8 +143,8 @@ test('Handle flags', (done) => {
   const data = Buffer.from(b64_data, 'base64')
   const price = parsePriceData(data)
 
-  expect(price.flags.accumulatorV2).toBe(true);
-  expect(price.flags.messageBufferCleared).toBe(true);
+  expect(price.flags.accumulatorV2).toBe(true)
+  expect(price.flags.messageBufferCleared).toBe(true)
 
   done()
 })

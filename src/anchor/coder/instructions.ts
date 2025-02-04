@@ -93,9 +93,9 @@ export class PythOracleInstructionCoder implements InstructionCoder {
     if (methodName === 'updProduct' || methodName === 'addProduct') {
       let offset = 0
       for (const key of Object.keys(ix.productMetadata)) {
-        offset += buffer.subarray(offset).writeUInt8(key.length)
+        offset += buffer.subarray(offset).writeUInt8(Buffer.byteLength(key))
         offset += buffer.subarray(offset).write(key)
-        offset += buffer.subarray(offset).writeUInt8(ix.productMetadata[key].length)
+        offset += buffer.subarray(offset).writeUInt8(Buffer.byteLength(ix.productMetadata[key]))
         offset += buffer.subarray(offset).write(ix.productMetadata[key])
       }
       if (offset > MAX_METADATA_SIZE) {
