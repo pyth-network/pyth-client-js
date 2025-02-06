@@ -59,6 +59,21 @@ test('Anchor', (done) => {
     })
 
   pythOracle.methods
+    .addProduct({
+      '😆': 'ÉTH',
+    })
+    .accounts({
+      fundingAccount: PublicKey.unique(),
+      productAccount: PublicKey.unique(),
+      tailMappingAccount: PublicKey.unique(),
+    })
+    .instruction()
+    .then((instruction) => {
+      const decoded = pythOracleCoder().instruction.decode(instruction.data)
+      expect(decoded?.data['😆']).toBe('ÉTH')
+    })
+
+  pythOracle.methods
     .updProduct({
       asset_type: 'Crypto',
       base: 'BTC',

@@ -42,8 +42,8 @@ export enum AccountType {
 }
 
 export type Flags = {
-  accumulatorV2: boolean,
-  messageBufferCleared: boolean,
+  accumulatorV2: boolean
+  messageBufferCleared: boolean
 }
 
 const empty32Buffer = Buffer.alloc(32)
@@ -110,7 +110,7 @@ export interface PriceData extends Base {
   minPublishers: number
   messageSent: number
   maxLatency: number
-  flags: Flags,
+  flags: Flags
   feedIndex: number
   productAccountKey: PublicKey
   nextPriceAccountKey: PublicKey | null
@@ -300,8 +300,8 @@ export const parsePriceData = (data: Buffer, currentSlot?: number): PriceData =>
 
   /* tslint:disable:no-bitwise */
   const flags = {
-    accumulatorV2: (flagBits & (1<<0)) !== 0,
-    messageBufferCleared: (flagBits & (1<<1)) !== 0,
+    accumulatorV2: (flagBits & (1 << 0)) !== 0,
+    messageBufferCleared: (flagBits & (1 << 1)) !== 0,
   }
   /* tslint:enable:no-bitwise */
 
